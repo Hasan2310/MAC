@@ -24,7 +24,7 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const url = "https://script.google.com/macros/s/AKfycbwx2Wifyj2A5yzntITDl8H54UDC_1NlLzucHN90EuC2zTUyaqJx5IjIHIvJ9uIvt5Mk/exec"
+    const url = "https://script.google.com/macros/s/AKfycbzO2W2VHqXNz8woJtq57k_w18JrquDEXdHj9wV_SkOHPKRAeaUC1UVvUCR7mXcs77_MNw/exec"
 
     try {
       // cek apakah lagi di localhost
