@@ -27,27 +27,17 @@ const App = () => {
     const url = "https://script.google.com/macros/s/AKfycbygj3Y32P0a2sCmHCwW4K2wwiKFW6JZVkkas6ZJHNPuDvXU6D2aUPfTlVVAUoTQAmFiPA/exec"
 
     try {
-      // cek apakah lagi di localhost
-      const isLocal = window.location.hostname === "localhost"
-
-      const response = await fetch(url, {
+      await fetch(url, {
         method: "POST",
-        mode: isLocal ? "no-cors" : "cors",
+        mode: "no-cors", // WAJIB kalau langsung ke GAS
         body: JSON.stringify(formData),
         headers: {
           "Content-Type": "application/json",
         },
       })
 
-      if (isLocal) {
-        // di localhost ga bisa baca balikan
-        alert("✅ Data berhasil dikirim (mode no-cors, tidak bisa baca response)")
-      } else {
-        // kalau udah deploy bisa baca balikan
-        const result = await response.json()
-        console.log("Response:", result)
-        alert("✅ Data berhasil dikirim: " + JSON.stringify(result.data))
-      }
+      // ⚠️ response ga bisa dibaca karena no-cors
+      alert("✅ Data berhasil dikirim ke Google Sheets!")
     } catch (error) {
       console.error("Error:", error)
       alert("❌ Gagal kirim data")
