@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import logo from "/logo.png";
+import Swal from "sweetalert2"; // Import SweetAlert2
 import './App.css';
 
 const App = () => {
@@ -40,17 +41,47 @@ const App = () => {
     // Validasi per slide aktif
     if (currentStep === 0) {
       if (busur === "" || jumlahRusak <= 0 || kerusakanBusur === "") {
-        alert("❌ Harap lengkapi semua field di slide 1! Jumlah rusak harus > 0");
+        Swal.fire({
+          showConfirmButton: false,
+          confirmButtonText: "OK",
+          html: `
+    <div class="text-center">
+      <img src="/seru.png" class="mx-auto mb-3 w-40 h-40" />
+      <h2 class="text-lg font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
+      <p class="text-sm">Jumlah rusak dan isi info kerusakan harus terisi</p>
+    </div>
+  `
+        });
         return;
       }
     } else if (currentStep === 1) {
       if (jenisArrow.length === 0 || jumlahRusak <= 0 || infoKerusakanArrow === "") {
-        alert("❌ Harap lengkapi semua field di slide 2! Jumlah rusak harus > 0");
+        Swal.fire({
+          showConfirmButton: false,
+          confirmButtonText: "OK",
+          html: `
+    <div class="text-center">
+      <img src="/seru.png" class="mx-auto mb-3 w-40 h-40" />
+      <h2 class="text-lg font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
+      <p class="text-sm">Jumlah rusak dan isi info kerusakan harus terisi</p>
+    </div>
+  `
+        });
         return;
       }
     } else if (currentStep === 2) {
       if (faceTarget === "" || jumlahRusak <= 0 || sponsTarget === "") {
-        alert("❌ Harap lengkapi semua field di slide 3! Jumlah rusak harus > 0");
+        Swal.fire({
+          showConfirmButton: false,
+          confirmButtonText: "OK",
+          html: `
+    <div class="text-center">
+      <img src="/seru.png" class="mx-auto mb-3 w-40 h-40" />
+      <h2 class="text-lg font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
+      <p class="text-sm">Jumlah rusak dan isi info kerusakan harus terisi</p>
+    </div>
+  `
+        });
         return;
       }
     }
@@ -81,10 +112,10 @@ const App = () => {
     }
   };
 
-
   const steps = [
     <div key="1">
-      <label className="block font-semibold text-lg mb-2">Busur *</label>
+      <label className="block font-semibold text-lg mb-2">Busur</label>
+      <div class="flex items-center">
       <input
         type="number"
         value={busurRaw}
@@ -100,10 +131,12 @@ const App = () => {
         placeholder="Berat Tarikan: 15-30"
         className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
       />
+      <span class="text-gray-800 font-semibold ml-3 select-none absolute right-8">Lbs</span>
+      </div>
 
       <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-lg">Jumlah Rusak *</label>
-        <div className="inline-flex items-center border border-gray-600 rounded-full overflow-hidden">
+        <label className="font-semibold text-lg">Jumlah Rusak</label>
+        <div className="inline-flex items-center border border-gray-600 rounded-lg overflow-hidden">
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
@@ -132,7 +165,7 @@ const App = () => {
         </div>
       </div>
 
-      <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Busur *</label>
+      <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Busur</label>
       <input
         type="text"
         value={kerusakanBusur}
@@ -143,7 +176,7 @@ const App = () => {
     </div>,
 
     <div key="2">
-      <label className="block font-semibold text-lg mb-2">Jenis Arrow *</label>
+      <label className="block font-semibold text-lg mb-2">Jenis Arrow</label>
       <div className="flex justify-between mt-3">
         <label className="inline-flex items-center text-md">
           <input type="checkbox" value="Arrow Vanes" checked={jenisArrow.includes("Arrow Vanes")}
@@ -158,63 +191,8 @@ const App = () => {
       </div>
 
       <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-lg">Jumlah Rusak *</label>
-        <div className="inline-flex items-center border border-gray-600 rounded-full overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
-          >
-            -
-          </button>
-          <input
-            type="number"
-            value={jumlahRusak}
-            onChange={e => {
-              const val = Number(e.target.value);
-              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 25));
-            }}
-            onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
-            onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-7 text-center border-none focus:outline-none text-md"
-          />
-          <button
-            type="button"
-            onClick={() => setJumlahRusak(p => Math.min(25, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Arrow *</label>
-      <input
-        type="text"
-        value={infoKerusakanArrow}
-        onChange={e => setInfoKerusakanArrow(e.target.value)}
-        placeholder="Contoh: fletching copot"
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
-      />
-    </div>,
-
-    <div key="3">
-      <label className="block font-semibold text-lg mb-2">Face Target *</label>
-      <select
-        value={faceTarget}
-        onChange={e => setFaceTarget(e.target.value)}
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
-      >
-        <option value="">-- Pilih Target --</option>
-        <option value="Target ring 5">Target ring 5</option>
-        <option value="Target ring 6">Target ring 6</option>
-        <option value="Target puta">Target puta</option>
-        <option value="Mega mendung">Mega mendung</option>
-      </select>
-
-      <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-lg">Jumlah Rusak *</label>
-        <div className="inline-flex items-center border border-gray-600 rounded-full overflow-hidden">
+        <label className="font-semibold text-lg">Jumlah Rusak</label>
+        <div className="inline-flex items-center border border-gray-600 rounded-lg overflow-hidden">
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
@@ -243,7 +221,62 @@ const App = () => {
         </div>
       </div>
 
-      <label className="block mt-6 font-semibold text-lg mb-2">Info Spons Target *</label>
+      <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Arrow</label>
+      <input
+        type="text"
+        value={infoKerusakanArrow}
+        onChange={e => setInfoKerusakanArrow(e.target.value)}
+        placeholder="Contoh: fletching copot"
+        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
+      />
+    </div>,
+
+    <div key="3">
+      <label className="block font-semibold text-lg mb-2">Face Target</label>
+      <select
+        value={faceTarget}
+        onChange={e => setFaceTarget(e.target.value)}
+        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
+      >
+        <option value="">-- Pilih Target --</option>
+        <option value="Target ring 5">Target ring 5</option>
+        <option value="Target ring 6">Target ring 6</option>
+        <option value="Target puta">Target puta</option>
+        <option value="Mega mendung">Mega mendung</option>
+      </select>
+
+      <div className="flex mt-6 justify-between items-center">
+        <label className="font-semibold text-lg">Jumlah Rusak</label>
+        <div className="inline-flex items-center border border-gray-600 rounded-lg overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
+          >
+            -
+          </button>
+          <input
+            type="number"
+            value={jumlahRusak}
+            onChange={e => {
+              const val = Number(e.target.value);
+              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 10));
+            }}
+            onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
+            onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
+            className="w-7 text-center border-none focus:outline-none text-md"
+          />
+          <button
+            type="button"
+            onClick={() => setJumlahRusak(p => Math.min(10, p + 1))}
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <label className="block mt-6 font-semibold text-lg mb-2">Info Spons Target</label>
       <input
         type="text"
         value={sponsTarget}
