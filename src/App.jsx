@@ -46,7 +46,7 @@ const App = () => {
           confirmButtonText: "OK",
           html: `
     <div class="text-center">
-      <img src="/seru.png" class="mx-auto mb-3 w-40 h-40" />
+      <img src="/seru.png" class="mx-auto mb-3 w-37 h-37" />
       <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
       <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
     </div>
@@ -61,7 +61,7 @@ const App = () => {
           confirmButtonText: "OK",
           html: `
     <div class="text-center">
-      <img src="/seru.png" class="mx-auto mb-3 w-40 h-40" />
+      <img src="/seru.png" class="mx-auto mb-3 w-37 h-37" />
       <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
       <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
     </div>
@@ -76,7 +76,7 @@ const App = () => {
           confirmButtonText: "OK",
           html: `
     <div class="text-center">
-      <img src="/seru.png" class="mx-auto mb-3 w-40 h-40" />
+      <img src="/seru.png" class="mx-auto mb-3 w-37 h-37" />
       <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
       <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
     </div>
@@ -116,53 +116,63 @@ const App = () => {
     <div key="1">
       <label className="block font-semibold text-lg mb-2">Busur</label>
       <div class="flex items-center">
-      <input
-        type="number"
-        value={busurRaw}
-        onChange={e => setBusurRaw(e.target.value)}
-        onBlur={() => {
-          let val = Number(busurRaw);
-          if (isNaN(val)) val = "";
-          else if (val < 15) val = 15;
-          else if (val > 30) val = 30;
-          setBusur(val);
-          setBusurRaw(val);
-        }}
-        placeholder="Berat Tarikan: 15-30"
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
-      />
-      <span class="text-gray-800 font-semibold ml-3 select-none absolute right-8">Lbs</span>
+        <input
+          type="number"
+          value={busurRaw}
+          onChange={e => setBusurRaw(e.target.value)}
+          onBlur={() => {
+            let val = Number(busurRaw);
+            if (isNaN(val)) val = "";
+            else if (val < 15) val = 15;
+            else if (val > 30) val = 30;
+            setBusur(val);
+            setBusurRaw(val);
+          }}
+          placeholder="Berat Tarikan: 15-30"
+          className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
+        />
+        <span class="text-gray-800 font-semibold ml-3 select-none absolute right-8">Lbs</span>
       </div>
 
-      <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-lg">Jumlah Rusak</label>
-        <div className="inline-flex items-center border border-gray-600 rounded-lg overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
-          >
-            -
-          </button>
+      <div className="mt-6 justify-between items-center">
+        <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
+        <div className="flex items-center gap-3 w-full py-3">
+          {/* Slider */}
+          <input
+            type="range"
+            min={0}
+            max={25}
+            value={jumlahRusak}
+            onChange={e => setJumlahRusak(Number(e.target.value))}
+            style={{
+              background: `linear-gradient(to right, #374151 ${(jumlahRusak / 26) * 100}%, #d1d5db ${(jumlahRusak / 26) * 100}%)`
+            }}
+            className="flex-1 appearance-none h-2 rounded-lg cursor-pointer 
+               [&::-webkit-slider-thumb]:appearance-none 
+               [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:h-0
+               [&::-webkit-slider-thumb]:border-t-[10px]
+               [&::-webkit-slider-thumb]:border-t-transparent
+               [&::-webkit-slider-thumb]:border-b-[10px]
+               [&::-webkit-slider-thumb]:border-b-transparent
+               [&::-webkit-slider-thumb]:border-l-[16px]
+               [&::-webkit-slider-thumb]:border-l-gray-700
+               [&::-moz-range-thumb]:appearance-none"
+          />
+
+          {/* Input angka di kanan */}
           <input
             type="number"
+            min={0}
+            max={25}
             value={jumlahRusak}
             onChange={e => {
               const val = Number(e.target.value);
-              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 10));
+              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 25));
             }}
-            onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
-            onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-7 text-center border-none focus:outline-none text-md"
+            className="w-12 text-center"
           />
-          <button
-            type="button"
-            onClick={() => setJumlahRusak(p => Math.min(10, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
-          >
-            +
-          </button>
         </div>
+
       </div>
 
       <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Busur</label>
@@ -190,35 +200,45 @@ const App = () => {
         </label>
       </div>
 
-      <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-lg">Jumlah Rusak</label>
-        <div className="inline-flex items-center border border-gray-600 rounded-lg overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
-          >
-            -
-          </button>
+      <div className="mt-6 justify-between items-center">
+        <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
+        <div className="flex items-center gap-3 w-full py-3">
+          {/* Slider */}
+          <input
+            type="range"
+            min={0}
+            max={25}
+            value={jumlahRusak}
+            onChange={e => setJumlahRusak(Number(e.target.value))}
+            style={{
+              background: `linear-gradient(to right, #374151 ${(jumlahRusak / 26) * 100}%, #d1d5db ${(jumlahRusak / 26) * 100}%)`
+            }}
+            className="flex-1 appearance-none h-2 rounded-lg cursor-pointer 
+               [&::-webkit-slider-thumb]:appearance-none 
+               [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:h-0
+               [&::-webkit-slider-thumb]:border-t-[10px]
+               [&::-webkit-slider-thumb]:border-t-transparent
+               [&::-webkit-slider-thumb]:border-b-[10px]
+               [&::-webkit-slider-thumb]:border-b-transparent
+               [&::-webkit-slider-thumb]:border-l-[16px]
+               [&::-webkit-slider-thumb]:border-l-gray-700
+               [&::-moz-range-thumb]:appearance-none"
+          />
+
+          {/* Input angka di kanan */}
           <input
             type="number"
+            min={0}
+            max={25}
             value={jumlahRusak}
             onChange={e => {
               const val = Number(e.target.value);
-              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 10));
+              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 25));
             }}
-            onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
-            onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-7 text-center border-none focus:outline-none text-md"
+            className="w-12 text-center"
           />
-          <button
-            type="button"
-            onClick={() => setJumlahRusak(p => Math.min(10, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
-          >
-            +
-          </button>
         </div>
+
       </div>
 
       <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Arrow</label>
@@ -245,35 +265,45 @@ const App = () => {
         <option value="Mega mendung">Mega mendung</option>
       </select>
 
-      <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-lg">Jumlah Rusak</label>
-        <div className="inline-flex items-center border border-gray-600 rounded-lg overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
-          >
-            -
-          </button>
+      <div className="mt-6 justify-between items-center">
+        <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
+        <div className="flex items-center gap-3 w-full py-3">
+          {/* Slider */}
+          <input
+            type="range"
+            min={0}
+            max={25}
+            value={jumlahRusak}
+            onChange={e => setJumlahRusak(Number(e.target.value))}
+            style={{
+              background: `linear-gradient(to right, #374151 ${(jumlahRusak / 26) * 100}%, #d1d5db ${(jumlahRusak / 26) * 100}%)`
+            }}
+            className="flex-1 appearance-none h-2 rounded-lg cursor-pointer 
+               [&::-webkit-slider-thumb]:appearance-none 
+               [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:h-0
+               [&::-webkit-slider-thumb]:border-t-[10px]
+               [&::-webkit-slider-thumb]:border-t-transparent
+               [&::-webkit-slider-thumb]:border-b-[10px]
+               [&::-webkit-slider-thumb]:border-b-transparent
+               [&::-webkit-slider-thumb]:border-l-[16px]
+               [&::-webkit-slider-thumb]:border-l-gray-700
+               [&::-moz-range-thumb]:appearance-none"
+          />
+
+          {/* Input angka di kanan */}
           <input
             type="number"
+            min={0}
+            max={25}
             value={jumlahRusak}
             onChange={e => {
               const val = Number(e.target.value);
-              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 10));
+              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 25));
             }}
-            onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
-            onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-7 text-center border-none focus:outline-none text-md"
+            className="w-12 text-center"
           />
-          <button
-            type="button"
-            onClick={() => setJumlahRusak(p => Math.min(10, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
-          >
-            +
-          </button>
         </div>
+
       </div>
 
       <label className="block mt-6 font-semibold text-lg mb-2">Info Spons Target</label>
