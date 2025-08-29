@@ -179,7 +179,7 @@ const App = () => {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="bg-white w-full max-w-md h-[90vh] rounded-xl shadow-lg pt-6 pb-24 overflow-hidden relative flex flex-col"
+        className="md:bg-white bg-gray-100 w-full max-w-md h-[90vh] rounded-xl shadow-lg pt-6 pb-24 overflow-hidden relative flex flex-col"
       >
         {/* Logo */}
         <div className="flex justify-center pb-4">
