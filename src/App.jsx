@@ -206,10 +206,10 @@ const App = () => {
         className="w-full border-b border-gray-600 focus:outline-none py-3 text-lg"
       >
         <option value="">-- Pilih Target --</option>
-        <option value="Mega mendung">Mega mendung</option>
-        <option value="Target puta">Target puta</option>
         <option value="Target ring 5">Target ring 5</option>
         <option value="Target ring 6">Target ring 6</option>
+        <option value="Target puta">Target puta</option>
+        <option value="Mega mendung">Mega mendung</option>
       </select>
 
       <div className="flex mt-6 justify-between items-center">
