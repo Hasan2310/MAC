@@ -1,5 +1,6 @@
-import React, { useState, useRef } from "react";
-import logo from "/logo.png";
+import React, { useState, useRef } from "react"
+import Icon from './assets/Icon'
+import logo from "/logo.png"
 import './App.css'
 
 const App = () => {
@@ -173,34 +174,34 @@ const App = () => {
   ];
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100 overflow-hidden">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <form
         onSubmit={handleSubmit}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="md:bg-white bg-gray-100 w-full max-w-md h-[90vh] rounded-xl shadow-lg pt-6 pb-24 overflow-hidden relative flex flex-col"
+        className="bg-white w-full sm:max-w-md md:max-w-lg lg:max-w-xl rounded-2xl shadow-2lg flex flex-col overflow-hidden relative"
       >
         {/* Logo */}
-        <div className="flex justify-center pb-4">
-          <img src={logo} alt="Logo" className="h-24 object-cover" />
+        <div className="flex justify-center">
+          <img src={logo} alt="Logo" className="h-50 w-full object-cover" />
         </div>
 
         {/* Title */}
-        <div className="bg-gray-300 text-center font-semibold text-2xl py-4 mb-6">
+        <div className="bg-gray-300 text-center font-semibold text-2xl md:text-3xl py-4 mb-6">
           REPARASI ITEM
         </div>
 
         {/* Step container */}
-        <div className="flex-1 flex flex-col justify-center overflow-hidden">
+        <div className="relative flex-1 w-full overflow-hidden">
           <div
-            className="flex w-full h-full transition-transform duration-300"
+            className="flex transition-transform duration-300"
             style={{ transform: `translateX(-${currentStep * 100}%)` }}
           >
             {steps.map((step, idx) => (
               <div
                 key={idx}
-                className="w-full h-full flex-shrink-0 flex flex-col justify-center px-8 py-6"
+                className="w-full flex-shrink-0 flex flex-col overflow-y-auto px-4 md:px-6 py-4 md:py-6"
               >
                 {step}
               </div>
@@ -209,28 +210,47 @@ const App = () => {
         </div>
 
         {/* Step indicator */}
-        <div className="flex justify-center mt-1 space-x-3">
+        <div className="flex justify-center mt-2 mb-4 space-x-3">
           {steps.map((_, idx) => (
-            <span
+            <div
               key={idx}
               onClick={() => setCurrentStep(idx)}
-              className={`w-4 h-4 rounded-full cursor-pointer ${currentStep === idx ? "bg-black" : "bg-gray-400"}`}
-            />
+              className="cursor-pointer"
+            >
+              <img
+                src={currentStep === idx ? "/pageico1.png" : "/pageico.png"}
+                alt={`step ${idx + 1}`}
+                className="w-5 h-5" // ukuran bisa disesuaikan
+              />
+            </div>
           ))}
         </div>
 
-        {/* Submit button */}
-        <button
-          type="submit"
-          className="absolute bottom-6 left-1/2 -translate-x-1/2
-                 bg-[#223B7D] text-white font-semibold text-xl
-                 w-sm py-3 rounded-lg shadow-[0_4px_10px_rgba(0,0,0,0.3)]
-                 hover:shadow-none active:translate-y-[2px] transition-transform"
-        >
-          Kirim
-        </button>
+        {/* Tombol submit tetap di bawah */}
+        <div className="w-full flex justify-center pb-10 pt-2 md:pt-4 bg-white">
+          <button
+            type="submit"
+            className="
+          w-[80%] md:w-5/6
+          bg-[#223B7D] 
+          text-white 
+          font-semibold 
+          text-xl md:text-2xl 
+          py-3 
+          rounded-lg 
+          shadow-[3px_3px_0_0_#fff,3px_3px_0_2px_#000] 
+          hover:shadow-none 
+          active:translate-x-[2px] active:translate-y-[2px] 
+          active:shadow-[4px_4px_0_0_#fff,4px_4px_0_1px_#000] 
+          transition-transform
+        "
+          >
+            Kirim
+          </button>
+        </div>
       </form>
     </div>
+
   );
 };
 
