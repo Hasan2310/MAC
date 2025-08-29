@@ -173,7 +173,7 @@ const App = () => {
   ];
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-screen bg-gray-100 overflow-hidden">
       <form
         onSubmit={handleSubmit}
         onTouchStart={handleTouchStart}
