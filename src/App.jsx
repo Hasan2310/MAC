@@ -102,7 +102,7 @@ const App = () => {
       />
 
       <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-lg">Jumlah Rusak *</label>
+        <label className="font-semibold text-xl">Jumlah Rusak *</label>
         <div className="inline-flex items-center border border-gray-600 rounded-full overflow-hidden">
           <button
             type="button"
@@ -158,7 +158,7 @@ const App = () => {
       </div>
 
       <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-lg">Jumlah Rusak *</label>
+        <label className="font-semibold text-xl">Jumlah Rusak *</label>
         <div className="inline-flex items-center border border-gray-600 rounded-full overflow-hidden">
           <button
             type="button"
@@ -213,7 +213,7 @@ const App = () => {
       </select>
 
       <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-lg">Jumlah Rusak *</label>
+        <label className="font-semibold text-xl">Jumlah Rusak *</label>
         <div className="inline-flex items-center border border-gray-600 rounded-full overflow-hidden">
           <button
             type="button"
