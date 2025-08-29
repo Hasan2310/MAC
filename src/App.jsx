@@ -84,7 +84,7 @@ const App = () => {
 
   const steps = [
     <div key="1">
-      <label className="block font-semibold text-xl mb-2">Busur *</label>
+      <label className="block font-semibold text-lg mb-2">Busur *</label>
       <input
         type="number"
         value={busurRaw}
@@ -98,16 +98,16 @@ const App = () => {
           setBusurRaw(val);
         }}
         placeholder="Berat Tarikan: 15-30"
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-lg"
+        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
       />
 
       <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-xl">Jumlah Rusak *</label>
+        <label className="font-semibold text-lg">Jumlah Rusak *</label>
         <div className="inline-flex items-center border border-gray-600 rounded-full overflow-hidden">
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-lg"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
           >
             -
           </button>
@@ -120,37 +120,37 @@ const App = () => {
             }}
             onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
             onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-16 text-center border-none focus:outline-none text-lg"
+            className="w-8 text-center border-none focus:outline-none text-md"
           />
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.min(10, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-lg"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
           >
             +
           </button>
         </div>
       </div>
 
-      <label className="block mt-6 font-semibold text-xl mb-2">Info Kerusakan Busur *</label>
+      <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Busur *</label>
       <input
         type="text"
         value={kerusakanBusur}
         onChange={e => setKerusakanBusur(e.target.value)}
         placeholder="Contoh: String longgar"
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-lg"
+        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
       />
     </div>,
 
     <div key="2">
-      <label className="block font-semibold text-xl mb-2">Jenis Arrow *</label>
+      <label className="block font-semibold text-lg mb-2">Jenis Arrow *</label>
       <div className="flex justify-between mt-3">
-        <label className="inline-flex items-center text-lg">
+        <label className="inline-flex items-center text-md">
           <input type="checkbox" value="Arrow Vanes" checked={jenisArrow.includes("Arrow Vanes")}
             onChange={() => handleCheckboxChange("Arrow Vanes")}
             className="mr-2 w-5 h-5" /> Arrow Vanes
         </label>
-        <label className="inline-flex items-center text-lg">
+        <label className="inline-flex items-center text-md">
           <input type="checkbox" value="Arrow Torba" checked={jenisArrow.includes("Arrow Torba")}
             onChange={() => handleCheckboxChange("Arrow Torba")}
             className="mr-2 w-5 h-5" /> Arrow Torba
@@ -158,12 +158,12 @@ const App = () => {
       </div>
 
       <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-xl">Jumlah Rusak *</label>
+        <label className="font-semibold text-lg">Jumlah Rusak *</label>
         <div className="inline-flex items-center border border-gray-600 rounded-full overflow-hidden">
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-lg"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
           >
             -
           </button>
@@ -176,34 +176,34 @@ const App = () => {
             }}
             onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
             onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-16 text-center border-none focus:outline-none text-lg"
+            className="w-8 text-center border-none focus:outline-none text-md"
           />
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.min(25, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-lg"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
           >
             +
           </button>
         </div>
       </div>
 
-      <label className="block mt-6 font-semibold text-xl mb-2">Info Kerusakan Arrow *</label>
+      <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Arrow *</label>
       <input
         type="text"
         value={infoKerusakanArrow}
         onChange={e => setInfoKerusakanArrow(e.target.value)}
         placeholder="Contoh: fletching copot"
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-lg"
+        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
       />
     </div>,
 
     <div key="3">
-      <label className="block font-semibold text-xl mb-2">Face Target *</label>
+      <label className="block font-semibold text-lg mb-2">Face Target *</label>
       <select
         value={faceTarget}
         onChange={e => setFaceTarget(e.target.value)}
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-lg"
+        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
       >
         <option value="">-- Pilih Target --</option>
         <option value="Target ring 5">Target ring 5</option>
@@ -213,12 +213,12 @@ const App = () => {
       </select>
 
       <div className="flex mt-6 justify-between items-center">
-        <label className="font-semibold text-xl">Jumlah Rusak *</label>
+        <label className="font-semibold text-lg">Jumlah Rusak *</label>
         <div className="inline-flex items-center border border-gray-600 rounded-full overflow-hidden">
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-lg"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
           >
             -
           </button>
@@ -231,25 +231,25 @@ const App = () => {
             }}
             onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
             onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-16 text-center border-none focus:outline-none text-lg"
+            className="w-8 text-center border-none focus:outline-none text-md"
           />
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.min(10, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-lg"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
           >
             +
           </button>
         </div>
       </div>
 
-      <label className="block mt-6 font-semibold text-xl mb-2">Info Spons Target *</label>
+      <label className="block mt-6 font-semibold text-lg mb-2">Info Spons Target *</label>
       <input
         type="text"
         value={sponsTarget}
         onChange={e => setSponsTarget(e.target.value)}
         placeholder="Contoh: bolong di tengah"
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-lg"
+        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
       />
     </div>
   ];
@@ -311,7 +311,7 @@ const App = () => {
               bg-[#223B7D] 
               text-white 
               font-semibold 
-              text-xl md:text-2xl 
+              text-lg md:text-2xl 
               py-3 
               rounded-lg 
               shadow-[3px_3px_0_0_#fff,3px_3px_0_2px_#000] 
