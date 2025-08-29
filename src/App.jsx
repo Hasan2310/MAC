@@ -47,8 +47,8 @@ const App = () => {
           html: `
     <div class="text-center">
       <img src="/seru.png" class="mx-auto mb-3 w-40 h-40" />
-      <h2 class="text-lg font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
-      <p class="text-sm">Jumlah rusak dan isi info kerusakan harus terisi</p>
+      <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
+      <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
     </div>
   `
         });
@@ -62,8 +62,8 @@ const App = () => {
           html: `
     <div class="text-center">
       <img src="/seru.png" class="mx-auto mb-3 w-40 h-40" />
-      <h2 class="text-lg font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
-      <p class="text-sm">Jumlah rusak dan isi info kerusakan harus terisi</p>
+      <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
+      <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
     </div>
   `
         });
@@ -77,8 +77,8 @@ const App = () => {
           html: `
     <div class="text-center">
       <img src="/seru.png" class="mx-auto mb-3 w-40 h-40" />
-      <h2 class="text-lg font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
-      <p class="text-sm">Jumlah rusak dan isi info kerusakan harus terisi</p>
+      <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
+      <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
     </div>
   `
         });
