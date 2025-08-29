@@ -107,7 +107,7 @@ const App = () => {
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
           >
             -
           </button>
@@ -120,12 +120,12 @@ const App = () => {
             }}
             onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
             onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-8 text-center border-none focus:outline-none text-md"
+            className="w-7 text-center border-none focus:outline-none text-md"
           />
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.min(10, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
           >
             +
           </button>
@@ -163,7 +163,7 @@ const App = () => {
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
           >
             -
           </button>
@@ -176,12 +176,12 @@ const App = () => {
             }}
             onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
             onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-8 text-center border-none focus:outline-none text-md"
+            className="w-7 text-center border-none focus:outline-none text-md"
           />
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.min(25, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
           >
             +
           </button>
@@ -218,7 +218,7 @@ const App = () => {
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.max(0, p - 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
           >
             -
           </button>
@@ -231,12 +231,12 @@ const App = () => {
             }}
             onFocus={() => { if (jumlahRusak === 0) setJumlahRusak(''); }}
             onBlur={() => { if (jumlahRusak === '') setJumlahRusak(0); }}
-            className="w-8 text-center border-none focus:outline-none text-md"
+            className="w-7 text-center border-none focus:outline-none text-md"
           />
           <button
             type="button"
             onClick={() => setJumlahRusak(p => Math.min(10, p + 1))}
-            className="px-4 py-2 font-bold hover:bg-gray-200 text-md"
+            className="px-4 py-2 font-bold hover:bg-gray-200 text-sm"
           >
             +
           </button>
