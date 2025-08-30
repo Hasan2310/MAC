@@ -103,16 +103,18 @@ const App = () => {
       sponsTarget
     };
     try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbwr9Eq4S0IMrK-rsqMiPzXHTNo0-FX_yDJSX_FxxEA7OdWHXcFeXVBEzuS86nl84_O-TA/exec", {
+      // kirim data lewat serverless API Vercel
+      const res = await fetch("/api/sendReport", {
         method: "POST",
-        body: JSON.stringify(formData),
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       const result = await res.json();
 
-      // WA message langsung pake dari backend (sudah ada ID otomatis)
+      // WA link
       const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(result.message)}`;
+      window.open(waLink, "_blank");
 
       Swal.fire({
         icon: "success",
@@ -133,6 +135,11 @@ const App = () => {
 
     } catch (error) {
       console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal mengirim laporan",
+        text: "Coba lagi nanti",
+      });
     }
   };
 
