@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import logo from "/logo.png";
-import Swal from "sweetalert2"; // Import SweetAlert2
+import Swal from "sweetalert2";
 import './App.css';
 
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
 
   const [busur, setBusur] = useState("");
   const [busurRaw, setBusurRaw] = useState("");
-  const [jumlahRusak, setJumlahRusak] = useState(0);
+  const [jumlahRusak, setJumlahRusak] = useState([0, 0, 0]);
   const [kerusakanBusur, setKerusakanBusur] = useState("");
   const [jenisArrow, setJenisArrow] = useState([]);
   const [infoKerusakanArrow, setInfoKerusakanArrow] = useState("");
@@ -18,7 +18,15 @@ const App = () => {
 
   const touchStartX = useRef(0);
 
-  // Swipe gesture
+  const handleJumlahRusakChange = (stepIdx, value) => {
+    setJumlahRusak(prev => {
+      const newArr = [...prev];
+      newArr[stepIdx] = value;
+      return newArr;
+    });
+  };
+
+  // swipe
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
     setOffsetX(0);
@@ -38,71 +46,89 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validasi per slide aktif
+    // validasi per step
     if (currentStep === 0) {
-      if (busur === "" || jumlahRusak <= 0 || kerusakanBusur === "") {
+      if (busur === "" || jumlahRusak[0] <= 0 || kerusakanBusur === "") {
         Swal.fire({
           showConfirmButton: false,
-          confirmButtonText: "OK",
           html: `
-    <div class="text-center">
-      <img src="/seru.png" class="mx-auto mb-3 w-37 h-37" />
-      <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
-      <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
-    </div>
-  `
+            <div class="text-center">
+              <img src="/seru.png" class="mx-auto mb-3 w-37 h-37" />
+              <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
+              <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
+            </div>
+          `
         });
         return;
       }
     } else if (currentStep === 1) {
-      if (jenisArrow.length === 0 || jumlahRusak <= 0 || infoKerusakanArrow === "") {
+      if (jenisArrow.length === 0 || jumlahRusak[1] <= 0 || infoKerusakanArrow === "") {
         Swal.fire({
           showConfirmButton: false,
-          confirmButtonText: "OK",
           html: `
-    <div class="text-center">
-      <img src="/seru.png" class="mx-auto mb-3 w-37 h-37" />
-      <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
-      <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
-    </div>
-  `
+            <div class="text-center">
+              <img src="/seru.png" class="mx-auto mb-3 w-37 h-37" />
+              <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
+              <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
+            </div>
+          `
         });
         return;
       }
     } else if (currentStep === 2) {
-      if (faceTarget === "" || jumlahRusak <= 0 || sponsTarget === "") {
+      if (faceTarget === "" || jumlahRusak[2] <= 0 || sponsTarget === "") {
         Swal.fire({
           showConfirmButton: false,
-          confirmButtonText: "OK",
           html: `
-    <div class="text-center">
-      <img src="/seru.png" class="mx-auto mb-3 w-37 h-37" />
-      <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
-      <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
-    </div>
-  `
+            <div class="text-center">
+              <img src="/seru.png" class="mx-auto mb-3 w-37 h-37" />
+              <h2 class="text-md font-semibold mb-2">Mohon lengkapi kolom kosong slide ini</h2>
+              <p class="text-xs">Jumlah rusak dan isi info kerusakan harus terisi</p>
+            </div>
+          `
         });
         return;
       }
     }
 
-    // Generate pesan WhatsApp dulu
-    const waMessage = `Data Reparasi Item:\nBusur: ${busur}\nJumlah Rusak: ${jumlahRusak}\nKerusakan Busur: ${kerusakanBusur}\nJenis Arrow: ${jenisArrow.join(", ")}\nInfo Kerusakan Arrow: ${infoKerusakanArrow}\nFace Target: ${faceTarget}\nInfo Spons Target: ${sponsTarget}`;
-    const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(waMessage)}`;
-    window.open(waLink, "_blank"); // langsung open WA
+    // ambil hanya jumlah rusak sesuai step aktif
+    const jumlahRusakAktif = jumlahRusak[currentStep];
 
-    // Submit ke Google Script tetap jalan
-    const formData = { busur, jumlahRusak, kerusakanBusur, jenisArrow, infoKerusakanArrow, faceTarget, sponsTarget };
+    // bikin pesan WA
+    const waMessage = `Data Reparasi Item (Step ${currentStep + 1}):\nBusur: ${busur}\nJenis Arrow: ${jenisArrow.join(", ")}\nFace Target: ${faceTarget}\nJumlah Rusak: ${jumlahRusakAktif}\nKerusakan Busur: ${kerusakanBusur}\nInfo Arrow: ${infoKerusakanArrow}\nSpons Target: ${sponsTarget}`;
+    const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(waMessage)}`;
+
+    Swal.fire({
+      icon: "success",
+      title: "Data laporan terkirim",
+      text: "Silakan konfirmasi ke WhatsApp",
+      confirmButtonText: "Konfirmasi WA"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.open(waLink, "_blank");
+      }
+    });
+
+    // submit ke Google Script (hanya satu jumlahRusakAktif)
+    const formData = {
+      busur,
+      jumlahRusak: jumlahRusakAktif,
+      kerusakanBusur,
+      jenisArrow,
+      infoKerusakanArrow,
+      faceTarget,
+      sponsTarget
+    };
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbyYa0F2hl8vyJoenj20zd9SL3Rfa7qmHynrVjaVxE2MrPenewDekDuv7uKjlQdQJUXl0g/exec", {
+      await fetch("https://script.google.com/macros/s/AKfycbz7grIcUOm8dryntJv0rJPP0qBbWvIEnGuptUM4mQZzB2hVsQtHLLyIqNNhUwUVW1krDg/exec", {
         method: "POST",
         mode: "no-cors",
         body: JSON.stringify(formData),
         headers: { "Content-Type": "application/json" },
       });
 
-      // reset semua
-      setBusur(""); setBusurRaw(""); setJumlahRusak(0); setKerusakanBusur("");
+      // reset form
+      setBusur(""); setBusurRaw(""); setJumlahRusak([0, 0, 0]); setKerusakanBusur("");
       setJenisArrow([]); setInfoKerusakanArrow("");
       setFaceTarget(""); setSponsTarget("");
       setCurrentStep(0);
@@ -112,10 +138,51 @@ const App = () => {
     }
   };
 
+  const renderSlider = (stepIdx) => (
+    <div className="flex items-center gap-3 w-full py-3">
+      <input
+        type="range"
+        min={0}
+        max={25}
+        value={jumlahRusak[stepIdx]}
+        onChange={e => handleJumlahRusakChange(stepIdx, Number(e.target.value))}
+        style={{
+          background: `linear-gradient(to right, #233975 ${(jumlahRusak[stepIdx] / 26) * 100}%, #d1d5db ${(jumlahRusak[stepIdx] / 25) * 100}%)`
+        }}
+        className="flex-1 appearance-none h-2 rounded-lg cursor-pointer 
+    [&::-webkit-slider-thumb]:appearance-none 
+    [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6
+    [&::-webkit-slider-thumb]:bg-[url('/arrow.png')]
+    [&::-webkit-slider-thumb]:bg-contain
+    [&::-webkit-slider-thumb]:bg-no-repeat
+    [&::-webkit-slider-thumb]:bg-center
+    [&::-webkit-slider-thumb]:cursor-pointer
+    [&::-moz-range-thumb]:appearance-none
+    [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6
+    [&::-moz-range-thumb]:bg-[url('/arrow.png')]
+    [&::-moz-range-thumb]:bg-contain
+    [&::-moz-range-thumb]:bg-no-repeat
+    [&::-moz-range-thumb]:bg-center
+  "
+      />
+      <input
+        type="number"
+        min={0}
+        max={25}
+        value={jumlahRusak[stepIdx]}
+        onChange={e => {
+          const val = Number(e.target.value);
+          handleJumlahRusakChange(stepIdx, isNaN(val) || val < 0 ? 0 : Math.min(val, 25));
+        }}
+        className="w-12 text-center"
+      />
+    </div>
+  );
+
   const steps = [
     <div key="1">
       <label className="block font-semibold text-lg mb-2">Busur</label>
-      <div class="flex items-center">
+      <div className="flex items-center">
         <input
           type="number"
           value={busurRaw}
@@ -131,48 +198,12 @@ const App = () => {
           placeholder="Berat Tarikan: 15-30"
           className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
         />
-        <span class="text-gray-800 font-semibold ml-3 select-none absolute right-8">Lbs</span>
+        <span className="text-gray-800 font-semibold ml-3 select-none absolute right-8">Lbs</span>
       </div>
 
-      <div className="mt-6 justify-between items-center">
+      <div className="mt-6">
         <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
-        <div className="flex items-center gap-3 w-full py-3">
-          {/* Slider */}
-          <input
-            type="range"
-            min={0}
-            max={25}
-            value={jumlahRusak}
-            onChange={e => setJumlahRusak(Number(e.target.value))}
-            style={{
-              background: `linear-gradient(to right, #374151 ${(jumlahRusak / 26) * 100}%, #d1d5db ${(jumlahRusak / 26) * 100}%)`
-            }}
-            className="flex-1 appearance-none h-2 rounded-lg cursor-pointer 
-               [&::-webkit-slider-thumb]:appearance-none 
-               [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:h-0
-               [&::-webkit-slider-thumb]:border-t-[10px]
-               [&::-webkit-slider-thumb]:border-t-transparent
-               [&::-webkit-slider-thumb]:border-b-[10px]
-               [&::-webkit-slider-thumb]:border-b-transparent
-               [&::-webkit-slider-thumb]:border-l-[16px]
-               [&::-webkit-slider-thumb]:border-l-gray-700
-               [&::-moz-range-thumb]:appearance-none"
-          />
-
-          {/* Input angka di kanan */}
-          <input
-            type="number"
-            min={0}
-            max={25}
-            value={jumlahRusak}
-            onChange={e => {
-              const val = Number(e.target.value);
-              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 25));
-            }}
-            className="w-12 text-center"
-          />
-        </div>
-
+        {renderSlider(0)}
       </div>
 
       <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Busur</label>
@@ -200,45 +231,9 @@ const App = () => {
         </label>
       </div>
 
-      <div className="mt-6 justify-between items-center">
+      <div className="mt-6">
         <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
-        <div className="flex items-center gap-3 w-full py-3">
-          {/* Slider */}
-          <input
-            type="range"
-            min={0}
-            max={25}
-            value={jumlahRusak}
-            onChange={e => setJumlahRusak(Number(e.target.value))}
-            style={{
-              background: `linear-gradient(to right, #374151 ${(jumlahRusak / 26) * 100}%, #d1d5db ${(jumlahRusak / 26) * 100}%)`
-            }}
-            className="flex-1 appearance-none h-2 rounded-lg cursor-pointer 
-               [&::-webkit-slider-thumb]:appearance-none 
-               [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:h-0
-               [&::-webkit-slider-thumb]:border-t-[10px]
-               [&::-webkit-slider-thumb]:border-t-transparent
-               [&::-webkit-slider-thumb]:border-b-[10px]
-               [&::-webkit-slider-thumb]:border-b-transparent
-               [&::-webkit-slider-thumb]:border-l-[16px]
-               [&::-webkit-slider-thumb]:border-l-gray-700
-               [&::-moz-range-thumb]:appearance-none"
-          />
-
-          {/* Input angka di kanan */}
-          <input
-            type="number"
-            min={0}
-            max={25}
-            value={jumlahRusak}
-            onChange={e => {
-              const val = Number(e.target.value);
-              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 25));
-            }}
-            className="w-12 text-center"
-          />
-        </div>
-
+        {renderSlider(1)}
       </div>
 
       <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Arrow</label>
@@ -265,45 +260,9 @@ const App = () => {
         <option value="Mega mendung">Mega mendung</option>
       </select>
 
-      <div className="mt-6 justify-between items-center">
+      <div className="mt-6">
         <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
-        <div className="flex items-center gap-3 w-full py-3">
-          {/* Slider */}
-          <input
-            type="range"
-            min={0}
-            max={25}
-            value={jumlahRusak}
-            onChange={e => setJumlahRusak(Number(e.target.value))}
-            style={{
-              background: `linear-gradient(to right, #374151 ${(jumlahRusak / 26) * 100}%, #d1d5db ${(jumlahRusak / 26) * 100}%)`
-            }}
-            className="flex-1 appearance-none h-2 rounded-lg cursor-pointer 
-               [&::-webkit-slider-thumb]:appearance-none 
-               [&::-webkit-slider-thumb]:w-0 [&::-webkit-slider-thumb]:h-0
-               [&::-webkit-slider-thumb]:border-t-[10px]
-               [&::-webkit-slider-thumb]:border-t-transparent
-               [&::-webkit-slider-thumb]:border-b-[10px]
-               [&::-webkit-slider-thumb]:border-b-transparent
-               [&::-webkit-slider-thumb]:border-l-[16px]
-               [&::-webkit-slider-thumb]:border-l-gray-700
-               [&::-moz-range-thumb]:appearance-none"
-          />
-
-          {/* Input angka di kanan */}
-          <input
-            type="number"
-            min={0}
-            max={25}
-            value={jumlahRusak}
-            onChange={e => {
-              const val = Number(e.target.value);
-              setJumlahRusak(isNaN(val) || val < 0 ? 0 : Math.min(val, 25));
-            }}
-            className="w-12 text-center"
-          />
-        </div>
-
+        {renderSlider(2)}
       </div>
 
       <label className="block mt-6 font-semibold text-lg mb-2">Info Spons Target</label>
