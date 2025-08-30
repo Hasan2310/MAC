@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
-import logo from "/logo.png";
+import { Range } from 'react-range';
 import Swal from "sweetalert2";
+import logo from "/logo.png";
 import './App.css';
 
 const App = () => {
@@ -91,28 +92,10 @@ const App = () => {
       }
     }
 
-    // ambil hanya jumlah rusak sesuai step aktif
-    const jumlahRusakAktif = jumlahRusak[currentStep];
-
-    // bikin pesan WA
-    const waMessage = `Data Reparasi Item (Step ${currentStep + 1}):\nBusur: ${busur}\nJenis Arrow: ${jenisArrow.join(", ")}\nFace Target: ${faceTarget}\nJumlah Rusak: ${jumlahRusakAktif}\nKerusakan Busur: ${kerusakanBusur}\nInfo Arrow: ${infoKerusakanArrow}\nSpons Target: ${sponsTarget}`;
-    const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(waMessage)}`;
-
-    Swal.fire({
-      icon: "success",
-      title: "Data laporan terkirim",
-      text: "Silakan konfirmasi ke WhatsApp",
-      confirmButtonText: "Konfirmasi WA"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.open(waLink, "_blank");
-      }
-    });
-
-    // submit ke Google Script (hanya satu jumlahRusakAktif)
+    // submit ke Google Script
     const formData = {
       busur,
-      jumlahRusak: jumlahRusakAktif,
+      jumlahRusak, // kirim array [step1, step2, step3]
       kerusakanBusur,
       jenisArrow,
       infoKerusakanArrow,
@@ -120,14 +103,29 @@ const App = () => {
       sponsTarget
     };
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbz7grIcUOm8dryntJv0rJPP0qBbWvIEnGuptUM4mQZzB2hVsQtHLLyIqNNhUwUVW1krDg/exec", {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbwr9Eq4S0IMrK-rsqMiPzXHTNo0-FX_yDJSX_FxxEA7OdWHXcFeXVBEzuS86nl84_O-TA/exec", {
         method: "POST",
-        mode: "no-cors",
         body: JSON.stringify(formData),
         headers: { "Content-Type": "application/json" },
       });
 
-      // reset form
+      const result = await res.json();
+
+      // WA message langsung pake dari backend (sudah ada ID otomatis)
+      const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(result.message)}`;
+
+      Swal.fire({
+        icon: "success",
+        title: "Data laporan terkirim",
+        text: "Silakan konfirmasi ke WhatsApp",
+        confirmButtonText: "Konfirmasi WA"
+      }).then((r) => {
+        if (r.isConfirmed) {
+          window.open(waLink, "_blank");
+        }
+      });
+
+      // reset form setelah sukses
       setBusur(""); setBusurRaw(""); setJumlahRusak([0, 0, 0]); setKerusakanBusur("");
       setJenisArrow([]); setInfoKerusakanArrow("");
       setFaceTarget(""); setSponsTarget("");
@@ -138,46 +136,60 @@ const App = () => {
     }
   };
 
-  const renderSlider = (stepIdx) => (
-    <div className="flex items-center gap-3 w-full py-3">
-      <input
-        type="range"
-        min={0}
-        max={25}
-        value={jumlahRusak[stepIdx]}
-        onChange={e => handleJumlahRusakChange(stepIdx, Number(e.target.value))}
-        style={{
-          background: `linear-gradient(to right, #233975 ${(jumlahRusak[stepIdx] / 26) * 100}%, #d1d5db ${(jumlahRusak[stepIdx] / 25) * 100}%)`
-        }}
-        className="flex-1 appearance-none h-2 rounded-lg cursor-pointer 
-    [&::-webkit-slider-thumb]:appearance-none 
-    [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6
-    [&::-webkit-slider-thumb]:bg-[url('/arrow.png')]
-    [&::-webkit-slider-thumb]:bg-contain
-    [&::-webkit-slider-thumb]:bg-no-repeat
-    [&::-webkit-slider-thumb]:bg-center
-    [&::-webkit-slider-thumb]:cursor-pointer
-    [&::-moz-range-thumb]:appearance-none
-    [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6
-    [&::-moz-range-thumb]:bg-[url('/arrow.png')]
-    [&::-moz-range-thumb]:bg-contain
-    [&::-moz-range-thumb]:bg-no-repeat
-    [&::-moz-range-thumb]:bg-center
-  "
-      />
-      <input
-        type="number"
-        min={0}
-        max={25}
-        value={jumlahRusak[stepIdx]}
-        onChange={e => {
-          const val = Number(e.target.value);
-          handleJumlahRusakChange(stepIdx, isNaN(val) || val < 0 ? 0 : Math.min(val, 25));
-        }}
-        className="w-12 text-center"
-      />
-    </div>
-  );
+  const MAX = 25;
+
+  const renderSlider = (stepIdx) => {
+    const value = jumlahRusak[stepIdx];
+
+    return (
+      <div className="flex items-center gap-3 w-full py-3">
+        {/* Slider */}
+        <Range
+          step={1}
+          min={0}
+          max={MAX}
+          values={[value]}
+          onChange={(vals) => handleJumlahRusakChange(stepIdx, vals[0])}
+          renderTrack={({ props, children }) => (
+            <div
+              {...props}
+              className="flex-1 h-2 rounded-lg bg-gray-300 relative"
+            >
+              {/* progress biru */}
+              <div
+                className="h-2 bg-[#233975] rounded-lg absolute top-0 left-0"
+                style={{ width: `${(value / MAX) * 100}%` }}
+              />
+              {children}
+            </div>
+          )}
+          renderThumb={({ props }) => (
+            <div
+              {...props}
+              className="w-6 h-6 bg-center bg-no-repeat bg-contain cursor-pointer"
+              style={{ backgroundImage: "url('/arrow.png')" }}
+            />
+          )}
+        />
+
+        {/* Input number */}
+        <input
+          type="number"
+          min={0}
+          max={MAX}
+          value={value}
+          onChange={(e) => {
+            const val = Number(e.target.value);
+            handleJumlahRusakChange(
+              stepIdx,
+              isNaN(val) || val < 0 ? 0 : Math.min(val, MAX)
+            );
+          }}
+          className="w-12 text-center"
+        />
+      </div>
+    );
+  };
 
   const steps = [
     <div key="1">
@@ -218,17 +230,27 @@ const App = () => {
 
     <div key="2">
       <label className="block font-semibold text-lg mb-2">Jenis Arrow</label>
-      <div className="flex justify-between mt-3">
-        <label className="inline-flex items-center text-md">
-          <input type="checkbox" value="Arrow Vanes" checked={jenisArrow.includes("Arrow Vanes")}
-            onChange={() => handleCheckboxChange("Arrow Vanes")}
-            className="mr-2 w-5 h-5" /> Arrow Vanes
-        </label>
-        <label className="inline-flex items-center text-md">
-          <input type="checkbox" value="Arrow Torba" checked={jenisArrow.includes("Arrow Torba")}
-            onChange={() => handleCheckboxChange("Arrow Torba")}
-            className="mr-2 w-5 h-5" /> Arrow Torba
-        </label>
+      <div className="grid grid-cols-2 text-center gap-3 mt-3">
+        {["Arrow Vanes", "Arrow Torba"].map((option) => (
+          <label
+            key={option}
+            className={`px-4 py-2 border rounded-lg cursor-pointer transition
+        ${jenisArrow.includes(option)
+                ? "bg-[#D9D9D9] text-[#233975]"
+                : "border-[#D9D9D9] text-black border-1"
+              }
+      `}
+          >
+            <input
+              type="checkbox"
+              value={option}
+              checked={jenisArrow.includes(option)}
+              onChange={() => handleCheckboxChange(option)}
+              className="hidden"
+            />
+            {option}
+          </label>
+        ))}
       </div>
 
       <div className="mt-6">
