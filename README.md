@@ -46,7 +46,3 @@ Here’s a peek at how it looks:
 Perfect for clubs or small organizations that want to **keep equipment in check** without wasting time on paperwork. Super practical, minimal setup, max efficiency.
 
 ---
-
-Kalau mau, aku bisa bikin versi **lebih Gen Z vibes + eye-catching**, misal pakai emoji lebih banyak, bahasa ringan, dan “sales pitch” supaya kelihatan **portfolio-ready** dan menarik buat orang yang lihat GitHub kamu.
-
-Mau aku buat versi itu juga?
