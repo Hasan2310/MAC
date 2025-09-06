@@ -1,48 +1,49 @@
 # MAC Reporting System 🏹
 
-A reporting system for **Muslim Archery Club (MAC)** to track damaged bows, arrows, and targets efficiently. This project streamlines reporting by combining **Google Forms** and **Google Sheets** via **Apps Script**, so the process is fast, organized, and accessible anytime.
+A reporting system for the **Muslim Archery Club (MAC)** to easily track damaged bows, arrows, and face targets.  
+This project combines **Google Forms** + **Google Sheets** via **Apps Script**, making reporting fast, organized, and always accessible.  
 
 ---
 
 ## Features ✨
 
-* Submit reports for damaged equipment via a user-friendly form
-* Automatically logs data to Google Sheets
-* Keeps equipment records organized and easy to access
-* Reduces paperwork and manual tracking
+- User-friendly form to report damaged equipment  
+- Data automatically recorded in Google Sheets  
+- Keeps records neat and easy to access  
+- Reduces paperwork and manual tracking  
 
 ---
 
 ## How It Works ⚡
 
-1. Club members fill out a **report form** for damaged equipment.
-2. The data is sent and **recorded automatically** in Google Sheets.
-3. Admins can **view, sort, and track** reports in real-time.
+1. Members fill out the **report form** for damaged equipment.  
+2. Data is automatically recorded in Google Sheets.  
+3. Admins can **view, sort, and track** reports in real-time.  
 
 ---
 
 ## Demo / Screenshot 📸
 
-Here’s a peek at how it looks:
+**Bow Report:**  
+![Bow Screenshot](public/M.png)  
 
-**Form submission:**
-![Form Screenshot](link-ke-screenshot-form.png)
+**Arrow Report:**  
+![Arrow Screenshot](public/M1.png)  
 
-**Google Sheets log:**
-![Sheet Screenshot](link-ke-screenshot-sheet.png)
+**Face Target Report:**  
+![Face Target Screenshot](public/M2.png)  
 
 ---
 
 ## Tech Stack 🛠
 
-* **Google Forms** – easy input for users
-* **Google Sheets** – organized data storage
-* **Apps Script** – automation between form and sheet
+- **Google Forms** – easy input for users  
+- **Google Sheets** – organized data storage  
+- **Apps Script** – automation between form & sheet  
 
 ---
 
 ## Why This Project? 💡
 
-Perfect for clubs or small organizations that want to **keep equipment in check** without wasting time on paperwork. Super practical, minimal setup, max efficiency.
-
----
+Perfect for clubs or small organizations that want to **keep equipment in check** without hassle.  
+Simple setup, maximum efficiency.  
