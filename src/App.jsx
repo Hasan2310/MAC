@@ -50,45 +50,45 @@ const App = () => {
     return (
       <div className="flex flex-col items-center gap-4 w-full px-4 py-2">
         <div className="flex w-full items-center gap-4">
-        <Range
-          step={1}
-          min={0}
-          max={MAX}
-          values={[val]}
-          onChange={(vals) => setVal(vals[0])}
-          renderTrack={({ props, children }) => (
-            <div {...props} className="rounded-lg bg-gray-300 h-2 relative w-full">
+          <Range
+            step={1}
+            min={0}
+            max={MAX}
+            values={[val]}
+            onChange={(vals) => setVal(vals[0])}
+            renderTrack={({ props, children }) => (
+              <div {...props} className="rounded-lg bg-gray-300 h-2 relative w-full">
+                <div
+                  className="h-2 bg-[#233975] rounded-lg absolute "
+                  style={{ width: `${(val / MAX) * 100}%` }}
+                />
+                {children}
+              </div>
+            )}
+            renderThumb={({ props }) => (
               <div
-                className="h-2 bg-[#233975] rounded-lg absolute "
-                style={{ width: `${(val / MAX) * 100}%` }}
+                {...props}
+                className="w-6 h-6 bg-center bg-no-repeat bg-contain cursor-pointer"
+                style={{ backgroundImage: "url('/arrow.png')" }}
               />
-              {children}
-            </div>
-          )}
-          renderThumb={({ props }) => (
-            <div
-              {...props}
-              className="w-6 h-6 bg-center bg-no-repeat bg-contain cursor-pointer"
-              style={{ backgroundImage: "url('/arrow.png')" }}
-            />
-          )}
-        />
-        <input
-          id={inputId}
-          type="number"
-          min={0}
-          max={MAX}
-          value={val}
-          onChange={(e) => {
-            let n = parseInt(e.target.value, 10);
-            if (isNaN(n)) n = 0;
-            if (n < 0) n = 0;
-            if (n > MAX) n = MAX;
-            setVal(n);
-          }}
-          className="w-20 text-center border border-gray-300 rounded py-1"
-        />
-                </div>
+            )}
+          />
+          <input
+            id={inputId}
+            type="number"
+            min={0}
+            max={MAX}
+            value={val}
+            onChange={(e) => {
+              let n = parseInt(e.target.value, 10);
+              if (isNaN(n)) n = 0;
+              if (n < 0) n = 0;
+              if (n > MAX) n = MAX;
+              setVal(n);
+            }}
+            className="w-20 text-center border border-gray-300 rounded py-1"
+          />
+        </div>
         <input
           id={infoId}
           type="text"
@@ -104,30 +104,30 @@ const App = () => {
   // -------------------------
   // Open arrow modal
   // -------------------------
-const openArrowModal = async (option) => {
-  const safeId = `arrowInput-${option.replace(/\s+/g, "-")}`;
-  const infoId = `arrowInfo-${option.replace(/\s+/g, "-")}`;
-  const arrow = arrowData[option];
+  const openArrowModal = async (option) => {
+    const safeId = `arrowInput-${option.replace(/\s+/g, "-")}`;
+    const infoId = `arrowInfo-${option.replace(/\s+/g, "-")}`;
+    const arrow = arrowData[option];
 
-  await MySwal.fire({
-    title: <span className="text-xl font-semibold">Jumlah Rusak & Info - {option}</span>,
-    html: <ArrowModalContent initial={arrow.jumlah} inputId={safeId} initialInfo={arrow.info} infoId={infoId} />,
-    showConfirmButton: false,
-    showCancelButton: false,
-    allowOutsideClick: true,
-    willClose: () => {
-      const numEl = document.getElementById(safeId);
-      const infoEl = document.getElementById(infoId);
-      const jumlah = parseInt(numEl?.value || "0", 10) || 0;
-      const info = infoEl?.value || "";
+    await MySwal.fire({
+      title: <span className="text-xl font-semibold">Jumlah Rusak & Info - {option}</span>,
+      html: <ArrowModalContent initial={arrow.jumlah} inputId={safeId} initialInfo={arrow.info} infoId={infoId} />,
+      showConfirmButton: false,
+      showCancelButton: false,
+      allowOutsideClick: true,
+      willClose: () => {
+        const numEl = document.getElementById(safeId);
+        const infoEl = document.getElementById(infoId);
+        const jumlah = parseInt(numEl?.value || "0", 10) || 0;
+        const info = infoEl?.value || "";
 
-      setArrowData((prev) => ({
-        ...prev,
-        [option]: { ...prev[option], selected: jumlah > 0, jumlah, info },
-      }));
-    },
-  });
-};
+        setArrowData((prev) => ({
+          ...prev,
+          [option]: { ...prev[option], selected: jumlah > 0, jumlah, info },
+        }));
+      },
+    });
+  };
 
 
   // -------------------------
@@ -253,25 +253,25 @@ const openArrowModal = async (option) => {
     // Step 1
     <div key="1">
       <label className="block font-semibold text-lg mb-2">Busur</label>
-<div className="flex items-center relative">
-  <input
-    type="number"
-    value={busurRaw}
-    onChange={(e) => setBusurRaw(e.target.value)}
-    onBlur={() => {
-      if (busurRaw === "") return; // biarin kosong dulu
-      let val = Number(busurRaw);
-      if (isNaN(val)) val = "";
-      else if (val < 15) val = 15;
-      else if (val > 30) val = 30;
-      setBusur(val);
-      setBusurRaw(val);
-    }}
-    placeholder="Berat Tarikan: 15-30"
-    className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
-  />
-  <span className="text-gray-800 font-semibold ml-3 select-none absolute right-8">Lbs</span>
-</div>
+      <div className="flex items-center relative">
+        <input
+          type="number"
+          value={busurRaw}
+          onChange={(e) => setBusurRaw(e.target.value)}
+          onBlur={() => {
+            if (busurRaw === "") return; // biarin kosong dulu
+            let val = Number(busurRaw);
+            if (isNaN(val)) val = "";
+            else if (val < 15) val = 15;
+            else if (val > 30) val = 30;
+            setBusur(val);
+            setBusurRaw(val);
+          }}
+          placeholder="Berat Tarikan: 15-30"
+          className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
+        />
+        <span className="text-gray-800 font-semibold ml-3 select-none absolute right-8">Lbs</span>
+      </div>
 
 
       <div className="mt-6">
@@ -305,12 +305,12 @@ const openArrowModal = async (option) => {
                 onClick={() => openArrowModal(option)}
               >
                 <div className="font-medium mb-1">{option}</div>
-                <img src={imgSrc} alt={option} className="w-60 h-55 mx-auto mb-1" />
-{arrow.jumlah > 0 && (
-  <span className="absolute -top-2 -right-2 bg-[#233975] text-white text-xs font-bold px-2 py-1 rounded-full">
-    {arrow.jumlah}
-  </span>
-)}
+                <img src={imgSrc} alt={option} className="w-60 mx-auto mb-1" />
+                {arrow.jumlah > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#233975] text-white text-xs font-bold px-2 py-1 rounded-full">
+                    {arrow.jumlah}
+                  </span>
+                )}
 
               </label>
             </div>
