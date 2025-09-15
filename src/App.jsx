@@ -94,7 +94,7 @@ const App = () => {
           value={info}
           onChange={(e) => setInfo(e.target.value)}
           placeholder="Contoh: fletching copot"
-          className="w-full border-b-gray-100 border-0 rounded outline-0 py-1"
+          className="w-full border-b border-gray-600 focus:outline-none py-1"
         />
       </div>
     );
@@ -190,20 +190,27 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Ambil semua arrow yang aktif
-    const activeArrows = Object.keys(arrowData)
-      .filter(key => arrowData[key].selected)
+    const arrowArr = Object.keys(arrowData)
+      .filter(key => arrowData[key].selected) // cuma arrow yang aktif
       .map(key => ({
         name: key,
-        jumlah: arrowData[key].jumlah, // ini tiap arrow punya jumlah sendiri
+        jumlah: arrowData[key].jumlah,
         info: arrowData[key].info
       }));
+
+    // buat string jumlah rusak arrow pakai koma
+    const jumlahRusakArrowStr = arrowArr.map(a => a.jumlah).join(",");
+
+    // buat string info arrow pakai titik koma
+    const infoArrowStr = arrowArr.map(a => a.info || "-").join("; ");
 
     const formData = {
       busur,
       jumlahBusurRusak,
       kerusakanBusur,
-      arrowData: activeArrows, // kirim array object tiap arrow
+      arrowData: arrowArr,
+      jumlahRusakArrowStr, // string jumlah rusak
+      infoArrowStr,        // string info
       faceTarget,
       jumlahTargetRusak,
       sponsTarget,
