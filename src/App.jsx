@@ -190,17 +190,20 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const arrowArr = Object.keys(arrowData).map((key) => ({
-      name: key,
-      jumlah: arrowData[key].jumlah,
-      info: arrowData[key].info,
-    }));
+    // Ambil semua arrow yang aktif
+    const activeArrows = Object.keys(arrowData)
+      .filter(key => arrowData[key].selected)
+      .map(key => ({
+        name: key,
+        jumlah: arrowData[key].jumlah,
+        info: arrowData[key].info
+      }));
 
     const formData = {
       busur,
       jumlahBusurRusak,
       kerusakanBusur,
-      arrowData: arrowArr,
+      arrowData: activeArrows,
       faceTarget,
       jumlahTargetRusak,
       sponsTarget,
@@ -214,7 +217,6 @@ const App = () => {
         body: JSON.stringify(formData),
       });
       const result = await res.json();
-
       const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(result.message)}`;
       setIsLoading(false);
 
@@ -227,7 +229,7 @@ const App = () => {
         if (r.isConfirmed) window.open(waLink, "_blank");
       });
 
-      // reset
+      // reset semua
       setBusur("");
       setBusurRaw("");
       setJumlahBusurRusak(0);
@@ -250,6 +252,7 @@ const App = () => {
       });
     }
   };
+
 
   // -------------------------
   // Steps
