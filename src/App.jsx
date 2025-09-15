@@ -39,6 +39,13 @@ const App = () => {
     const [val, setVal] = useState(initial);
     const [info, setInfo] = useState(initialInfo);
 
+    useEffect(() => {
+      const el = document.getElementById(inputId);
+      if (el) el.value = val;
+      const infoEl = document.getElementById(infoId);
+      if (infoEl) infoEl.value = info;
+    }, [val, info, inputId, infoId]);
+
     return (
       <div className="flex flex-col items-center gap-4 w-full px-4 py-2">
         <div className="flex w-full items-center gap-4">
@@ -76,11 +83,10 @@ const App = () => {
               if (isNaN(n)) n = 0;
               if (n < 0) n = 0;
               if (n > MAX) n = MAX;
-              setVal(n); // langsung update state
+              setVal(n);
             }}
-            className="w-24 text-center border border-gray-300 rounded py-1"
+            className="w-20 text-center border border-gray-300 rounded py-1"
           />
-
         </div>
         <input
           id={infoId}
@@ -109,8 +115,10 @@ const App = () => {
       showCancelButton: false,
       allowOutsideClick: true,
       willClose: () => {
-        const jumlah = val;    // pakai state langsung
-        const info = info;     // pakai state langsung
+        const numEl = document.getElementById(safeId);
+        const infoEl = document.getElementById(infoId);
+        const jumlah = parseInt(numEl?.value || "0", 10) || 0;
+        const info = infoEl?.value || "";
 
         setArrowData((prev) => ({
           ...prev,
