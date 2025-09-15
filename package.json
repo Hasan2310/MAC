@@ -7,14 +7,16 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "git": "git add . && git commit -m 'UPDATE' && git push"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.12",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-range": "^1.10.0",
-    "sweetalert2": "^11.22.5",
+    "sweetalert2": "^11.23.0",
+    "sweetalert2-react-content": "^5.1.0",
     "tailwindcss": "^4.1.12"
   },
   "devDependencies": {

@@ -9,7 +9,7 @@ This project combines **Google Forms** + **Google Sheets** via **Apps Script**, 
 
 - User-friendly form to report damaged equipment  
 - Data automatically recorded in Google Sheets  
-- Keeps records neat and easy to access  
+- Keeps records neat and easy to access   
 - Reduces paperwork and manual tracking  
 
 ---
