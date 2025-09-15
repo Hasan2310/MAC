@@ -195,7 +195,7 @@ const App = () => {
       .filter(key => arrowData[key].selected)
       .map(key => ({
         name: key,
-        jumlah: arrowData[key].jumlah,
+        jumlah: arrowData[key].jumlah, // ini tiap arrow punya jumlah sendiri
         info: arrowData[key].info
       }));
 
@@ -203,7 +203,7 @@ const App = () => {
       busur,
       jumlahBusurRusak,
       kerusakanBusur,
-      arrowData: activeArrows,
+      arrowData: activeArrows, // kirim array object tiap arrow
       faceTarget,
       jumlahTargetRusak,
       sponsTarget,
