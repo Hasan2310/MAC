@@ -305,7 +305,7 @@ const App = () => {
                 onClick={() => openArrowModal(option)}
               >
                 <div className="font-medium mb-1">{option}</div>
-                <img src={imgSrc} alt={option} className="w-60 mx-auto mb-1" />
+                <img src={imgSrc} alt={option} className="w-auto mx-auto mb-1" />
                 {arrow.jumlah > 0 && (
                   <span className="absolute -top-2 -right-2 bg-[#233975] text-white text-xs font-bold px-2 py-1 rounded-full">
                     {arrow.jumlah}
