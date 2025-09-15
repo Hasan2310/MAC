@@ -1,4 +1,3 @@
-// App.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { Range } from "react-range";
 import Swal from "sweetalert2";
@@ -129,7 +128,6 @@ const App = () => {
     });
   };
 
-
   // -------------------------
   // Slider helper
   // -------------------------
@@ -191,11 +189,18 @@ const App = () => {
   // -------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const arrowArr = Object.keys(arrowData).map((key) => ({
+      name: key,
+      jumlah: arrowData[key].jumlah,
+      info: arrowData[key].info,
+    }));
+
     const formData = {
       busur,
       jumlahBusurRusak,
       kerusakanBusur,
-      arrowData,
+      arrowData: arrowArr,
       faceTarget,
       jumlahTargetRusak,
       sponsTarget,
@@ -229,7 +234,7 @@ const App = () => {
       setKerusakanBusur("");
       setArrowData({
         "Arrow Vanes": { selected: false, jumlah: 0, info: "", imgEmpty: "/vanes.png", imgFilled: "/vanesa.png" },
-        "Arrow Torba": { selected: false, jumlah: 0, info: "", imgEmpty: "/torba.png", imgFilled: "/torba1].png" },
+        "Arrow Torba": { selected: false, jumlah: 0, info: "", imgEmpty: "/torba.png", imgFilled: "/torba1.png" },
       });
       setFaceTarget("");
       setJumlahTargetRusak(0);
@@ -259,7 +264,7 @@ const App = () => {
           value={busurRaw}
           onChange={(e) => setBusurRaw(e.target.value)}
           onBlur={() => {
-            if (busurRaw === "") return; // biarin kosong dulu
+            if (busurRaw === "") return;
             let val = Number(busurRaw);
             if (isNaN(val)) val = "";
             else if (val < 15) val = 15;
@@ -272,7 +277,6 @@ const App = () => {
         />
         <span className="text-gray-800 font-semibold ml-3 select-none absolute right-8">Lbs</span>
       </div>
-
 
       <div className="mt-6">
         <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
@@ -292,26 +296,30 @@ const App = () => {
     // Step 2
     <div key="2">
       <label className="block font-semibold text-lg mb-2">Jenis Arrow</label>
-      <div className="grid grid-cols-2 gap-3 text-center mt-3 w-full">
+      <div className="grid grid-cols-2 text-center mt-3 gap-3 w-full">
         {Object.keys(arrowData).map((option) => {
           const arrow = arrowData[option];
           const imgSrc = arrow.jumlah > 0 ? arrow.imgFilled : arrow.imgEmpty;
 
           return (
-            <div key={option} className="flex flex-col items-center">
+            <div key={option} className="flex justify-center">
               <label
-                className={`px-4 py-2 border rounded-lg cursor-pointer transition relative
+                className={`border rounded-lg cursor-pointer transition relative flex flex-col items-center
+                px-5 md:py-5 py-12  w-full
                 ${arrow.selected ? "text-[#233975] border-[2px] border-[#233975]" : "border-[#D9D9D9] text-black border-1"}`}
                 onClick={() => openArrowModal(option)}
               >
-                <div className="font-medium mb-1">{option}</div>
-                <img src={imgSrc} alt={option} className="w-auto mx-auto mb-1" />
+                <div className="font-medium mb-2">{option}</div>
+                <img
+                  src={imgSrc}
+                  alt={option}
+                  className="w-full h-auto max-h-[120px] object-contain mb-1"
+                />
                 {arrow.jumlah > 0 && (
                   <span className="absolute -top-2 -right-2 bg-[#233975] text-white text-xs font-bold px-2 py-1 rounded-full">
                     {arrow.jumlah}
                   </span>
                 )}
-
               </label>
             </div>
           );
