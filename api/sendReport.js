@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      "https://script.google.com/macros/s/AKfycbwZghtdDYfJ44g2PgtQK4Gj3TmjBuXtL8ZTqzRdwmNOyb5bT0OtgBhuGZyEy0QN3MK4PQ/exec", // ganti dengan ID GAS kamu
+      "https://script.google.com/macros/s/AKfycbwSACi1n4t4uil6-W85uhTuiO9jLG2XiAOvZbjjQgIqo-FVU_71CLNcPCeXKxA4zNPVxg/exec", // ganti dengan ID GAS kamu
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
