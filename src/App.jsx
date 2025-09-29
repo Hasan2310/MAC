@@ -1,11 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Range } from "react-range";
+import React, { useState, useRef } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+
 import logo from "/logo.png";
 import "./App.css";
 
-const MAX = 25;
+// Components
+import StepBusur from "./components/StepBusur";
+import StepArrow from "./components/StepArrow";
+import StepTarget from "./components/StepTarget";
+import ArrowModalContent from "./components/ArrowModalContent";
+
 const MySwal = withReactContent(Swal);
 
 const App = () => {
@@ -19,10 +24,18 @@ const App = () => {
   const [kerusakanBusur, setKerusakanBusur] = useState("");
 
   // Step 2 (arrow)
-  const [arrowData, setArrowData] = useState({
-    "Arrow Vanes": { selected: false, jumlah: 0, info: "", imgEmpty: "/vanes.png", imgFilled: "/vanesa.png" },
-    "Arrow Torba": { selected: false, jumlah: 0, info: "", imgEmpty: "/torba.png", imgFilled: "/torba1.png" },
+  const [arrowWood, setArrowWood] = useState({ jumlah: 0, info: "" });
+  const [arrowCarbon, setArrowCarbon] = useState({
+    vanes: { jumlah: 0, info: "" },
+    torba: { jumlah: 0, info: "" },
   });
+
+  // Inventori arrow maksimum
+  const stock = {
+    wood: 30,
+    carbonVanes: 50,
+    carbonTorba: 20,
+  };
 
   // Step 3 (target)
   const [faceTarget, setFaceTarget] = useState("");
@@ -33,142 +46,98 @@ const App = () => {
   const touchStartX = useRef(0);
 
   // -------------------------
-  // Modal content for arrow
-  // -------------------------
-  const ArrowModalContent = ({ initial = 0, inputId, initialInfo = "", infoId }) => {
-    const [val, setVal] = useState(initial);
-    const [info, setInfo] = useState(initialInfo);
-
-    useEffect(() => {
-      const el = document.getElementById(inputId);
-      if (el) el.value = val;
-      const infoEl = document.getElementById(infoId);
-      if (infoEl) infoEl.value = info;
-    }, [val, info, inputId, infoId]);
-
-    return (
-      <div className="flex flex-col items-center gap-4 w-full px-4 py-2">
-        <div className="flex w-full items-center gap-4">
-          <Range
-            step={1}
-            min={0}
-            max={MAX}
-            values={[val]}
-            onChange={(vals) => setVal(vals[0])}
-            renderTrack={({ props, children }) => (
-              <div {...props} className="rounded-lg bg-gray-300 h-2 relative w-full">
-                <div
-                  className="h-2 bg-[#233975] rounded-lg absolute "
-                  style={{ width: `${(val / MAX) * 100}%` }}
-                />
-                {children}
-              </div>
-            )}
-            renderThumb={({ props }) => (
-              <div
-                {...props}
-                className="w-6 h-6 bg-center bg-no-repeat bg-contain cursor-pointer"
-                style={{ backgroundImage: "url('/arrow.png')" }}
-              />
-            )}
-          />
-          <input
-            id={inputId}
-            type="number"
-            min={0}
-            max={MAX}
-            value={val}
-            onChange={(e) => {
-              let n = parseInt(e.target.value, 10);
-              if (isNaN(n)) n = 0;
-              if (n < 0) n = 0;
-              if (n > MAX) n = MAX;
-              setVal(n);
-            }}
-            className="w-20 text-center border border-gray-300 rounded py-1"
-          />
-        </div>
-        <input
-          id={infoId}
-          type="text"
-          value={info}
-          onChange={(e) => setInfo(e.target.value)}
-          placeholder="Contoh: fletching copot"
-          className="w-full border-b border-gray-600 focus:outline-none py-1"
-        />
-      </div>
-    );
-  };
-
-  // -------------------------
   // Open arrow modal
   // -------------------------
-  const openArrowModal = async (option) => {
-    const safeId = `arrowInput-${option.replace(/\s+/g, "-")}`;
-    const infoId = `arrowInfo-${option.replace(/\s+/g, "-")}`;
-    const arrow = arrowData[option];
-
+const openArrowModal = async (type) => {
+  if (type === "Arrow Wood") {
     await MySwal.fire({
-      title: <span className="text-xl font-semibold">Jumlah Rusak & Info - {option}</span>,
-      html: <ArrowModalContent initial={arrow.jumlah} inputId={safeId} initialInfo={arrow.info} infoId={infoId} />,
+      title: (
+        <span className="text-xl font-semibold text-[#233975] text-left">
+          Arrow Wood
+        </span>
+      ),
+      html: (
+        <div className="text-left">
+          <ArrowModalContent
+            initial={arrowWood.jumlah}
+            inputId="woodJumlah"
+            initialInfo={arrowWood.info}
+            infoId="woodInfo"
+            maxStock={stock.wood}
+          />
+        </div>
+      ),
       showConfirmButton: false,
-      showCancelButton: false,
       allowOutsideClick: true,
       willClose: () => {
-        const numEl = document.getElementById(safeId);
-        const infoEl = document.getElementById(infoId);
-        const jumlah = parseInt(numEl?.value || "0", 10) || 0;
-        const info = infoEl?.value || "";
-
-        setArrowData((prev) => ({
-          ...prev,
-          [option]: { ...prev[option], selected: jumlah > 0, jumlah, info },
-        }));
+        const jumlah = parseInt(
+          document.getElementById("woodJumlah")?.value || "0",
+          10
+        );
+        const info = document.getElementById("woodInfo")?.value || "";
+        setArrowWood({ jumlah, info });
       },
     });
-  };
+  }
 
-  // -------------------------
-  // Slider helper
-  // -------------------------
-  const renderSlider = (value, setValue) => (
-    <div className="flex items-center gap-3 w-full py-3">
-      <Range
-        step={1}
-        min={0}
-        max={MAX}
-        values={[value]}
-        onChange={(vals) => setValue(vals[0])}
-        renderTrack={({ props, children }) => (
-          <div {...props} className="flex-1 h-2 rounded-lg bg-gray-300 relative">
-            <div
-              className="h-2 bg-[#233975] rounded-lg absolute top-0 left-0"
-              style={{ width: `${(value / MAX) * 100}%` }}
+  if (type === "Arrow Carbon") {
+    await MySwal.fire({
+      title: (
+        <span className="text-xl font-semibold text-[#233975] text-left">
+          Arrow Carbon
+        </span>
+      ),
+      html: (
+        <div className="flex flex-col gap-4 text-left">
+          <div>
+            <p className="font-semibold mb-2 text-[#233975]">Vanes</p>
+            <ArrowModalContent
+              initial={arrowCarbon.vanes.jumlah}
+              inputId="carbonVanesJumlah"
+              initialInfo={arrowCarbon.vanes.info}
+              infoId="carbonVanesInfo"
+              maxStock={stock.carbonVanes}
             />
-            {children}
           </div>
-        )}
-        renderThumb={({ props }) => (
-          <div
-            {...props}
-            className="w-6 h-6 bg-center bg-no-repeat bg-contain cursor-pointer"
-            style={{ backgroundImage: "url('/arrow.png')" }}
-          />
-        )}
-      />
-      <input
-        type="number"
-        min={0}
-        max={MAX}
-        value={value}
-        onChange={(e) => {
-          const val = Number(e.target.value);
-          setValue(isNaN(val) || val < 0 ? 0 : Math.min(val, MAX));
-        }}
-        className="w-12 text-center"
-      />
-    </div>
-  );
+          <div>
+            <p className="font-semibold mb-2 text-[#233975]">Torba</p>
+            <ArrowModalContent
+              initial={arrowCarbon.torba.jumlah}
+              inputId="carbonTorbaJumlah"
+              initialInfo={arrowCarbon.torba.info}
+              infoId="carbonTorbaInfo"
+              maxStock={stock.carbonTorba}
+            />
+          </div>
+        </div>
+      ),
+      width: 600,
+      showConfirmButton: false,
+      allowOutsideClick: true,
+      willClose: () => {
+        const vanesJumlah = parseInt(
+          document.getElementById("carbonVanesJumlah")?.value || "0",
+          10
+        );
+        const vanesInfo =
+          document.getElementById("carbonVanesInfo")?.value || "";
+
+        const torbaJumlah = parseInt(
+          document.getElementById("carbonTorbaJumlah")?.value || "0",
+          10
+        );
+        const torbaInfo =
+          document.getElementById("carbonTorbaInfo")?.value || "";
+
+        setArrowCarbon({
+          vanes: { jumlah: vanesJumlah, info: vanesInfo },
+          torba: { jumlah: torbaJumlah, info: torbaInfo },
+        });
+      },
+    });
+  }
+};
+
 
   // -------------------------
   // Swipe handlers
@@ -177,10 +146,13 @@ const App = () => {
     touchStartX.current = e.touches[0].clientX;
     setOffsetX(0);
   };
-  const handleTouchMove = (e) => setOffsetX(e.touches[0].clientX - touchStartX.current);
+  const handleTouchMove = (e) =>
+    setOffsetX(e.touches[0].clientX - touchStartX.current);
   const handleTouchEnd = () => {
-    if (offsetX < -50 && currentStep < steps.length - 1) setCurrentStep((s) => s + 1);
-    else if (offsetX > 50 && currentStep > 0) setCurrentStep((s) => s - 1);
+    if (offsetX < -50 && currentStep < steps.length - 1)
+      setCurrentStep((s) => s + 1);
+    else if (offsetX > 50 && currentStep > 0)
+      setCurrentStep((s) => s - 1);
     setOffsetX(0);
   };
 
@@ -190,31 +162,23 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const arrowArr = Object.keys(arrowData)
-      .filter(key => arrowData[key].selected) // cuma arrow yang aktif
-      .map(key => ({
-        name: key,
-        jumlah: arrowData[key].jumlah,
-        info: arrowData[key].info
-      }));
-
-    // buat string jumlah rusak arrow pakai koma
-    const jumlahRusakArrowStr = arrowArr.map(a => a.jumlah).join(",");
-
-    // buat string info arrow pakai titik koma
-    const infoArrowStr = arrowArr.map(a => a.info || "-").join("; ");
-
     const formData = {
       busur,
       jumlahBusurRusak,
       kerusakanBusur,
-      arrowData: arrowArr,
-      jumlahRusakArrowStr, // string jumlah rusak
-      infoArrowStr,        // string info
+      arrowWood,
+      arrowCarbon,
       faceTarget,
       jumlahTargetRusak,
       sponsTarget,
     };
+
+    const arrowReport = `
+Arrow Wood: ${arrowWood.jumlah} (${arrowWood.info || "-"})
+Arrow Carbon:
+  - Vanes: ${arrowCarbon.vanes.jumlah} (${arrowCarbon.vanes.info || "-"})
+  - Torba: ${arrowCarbon.torba.jumlah} (${arrowCarbon.torba.info || "-"})
+    `;
 
     try {
       setIsLoading(true);
@@ -224,7 +188,9 @@ const App = () => {
         body: JSON.stringify(formData),
       });
       const result = await res.json();
-      const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(result.message)}`;
+      const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(
+        result.message + "\n\n" + arrowReport
+      )}`;
       setIsLoading(false);
 
       Swal.fire({
@@ -236,14 +202,15 @@ const App = () => {
         if (r.isConfirmed) window.open(waLink, "_blank");
       });
 
-      // reset semua
+      // reset
       setBusur("");
       setBusurRaw("");
       setJumlahBusurRusak(0);
       setKerusakanBusur("");
-      setArrowData({
-        "Arrow Vanes": { selected: false, jumlah: 0, info: "", imgEmpty: "/vanes.png", imgFilled: "/vanesa.png" },
-        "Arrow Torba": { selected: false, jumlah: 0, info: "", imgEmpty: "/torba.png", imgFilled: "/torba1.png" },
+      setArrowWood({ jumlah: 0, info: "" });
+      setArrowCarbon({
+        vanes: { jumlah: 0, info: "" },
+        torba: { jumlah: 0, info: "" },
       });
       setFaceTarget("");
       setJumlahTargetRusak(0);
@@ -260,112 +227,31 @@ const App = () => {
     }
   };
 
-
   // -------------------------
   // Steps
   // -------------------------
   const steps = [
-    // Step 1
-    <div key="1">
-      <label className="block font-semibold text-lg mb-2">Busur</label>
-      <div className="flex items-center relative">
-        <input
-          type="number"
-          value={busurRaw}
-          onChange={(e) => setBusurRaw(e.target.value)}
-          onBlur={() => {
-            if (busurRaw === "") return;
-            let val = Number(busurRaw);
-            if (isNaN(val)) val = "";
-            else if (val < 15) val = 15;
-            else if (val > 30) val = 30;
-            setBusur(val);
-            setBusurRaw(val);
-          }}
-          placeholder="Berat Tarikan: 15-30"
-          className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
-        />
-        <span className="text-gray-800 font-semibold ml-3 select-none absolute right-8">Lbs</span>
-      </div>
-
-      <div className="mt-6">
-        <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
-        {renderSlider(jumlahBusurRusak, setJumlahBusurRusak)}
-      </div>
-
-      <label className="block mt-6 font-semibold text-lg mb-2">Info Kerusakan Busur</label>
-      <input
-        type="text"
-        value={kerusakanBusur}
-        onChange={(e) => setKerusakanBusur(e.target.value)}
-        placeholder="Contoh: String longgar"
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
-      />
-    </div>,
-
-    // Step 2
-    <div key="2">
-      <label className="block font-semibold text-lg mb-2">Jenis Arrow</label>
-      <div className="grid grid-cols-2 text-center mt-3 gap-3 w-full">
-        {Object.keys(arrowData).map((option) => {
-          const arrow = arrowData[option];
-          const imgSrc = arrow.jumlah > 0 ? arrow.imgFilled : arrow.imgEmpty;
-
-          return (
-            <div key={option} className="flex justify-center">
-              <label
-                className={`border rounded-lg cursor-pointer transition relative flex flex-col items-center
-                px-5 md:py-5 py-12  w-full
-                ${arrow.selected ? "text-[#233975] border-[2px] border-[#233975]" : "border-[#D9D9D9] text-black border-1"}`}
-                onClick={() => openArrowModal(option)}
-              >
-                <div className="font-medium mb-2">{option}</div>
-                <img
-                  src={imgSrc}
-                  alt={option}
-                  className="w-full h-auto max-h-[120px] object-contain mb-1"
-                />
-                {arrow.jumlah > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#233975] text-white text-xs font-bold px-2 py-1 rounded-full">
-                    {arrow.jumlah}
-                  </span>
-                )}
-              </label>
-            </div>
-          );
-        })}
-      </div>
-    </div>,
-
-    // Step 3
-    <div key="3">
-      <label className="block font-semibold text-lg mb-2">Face Target</label>
-      <select
-        value={faceTarget}
-        onChange={(e) => setFaceTarget(e.target.value)}
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
-      >
-        <option value="">-- Pilih Target --</option>
-        <option value="Target ring 5">Target ring 5</option>
-        <option value="Target ring 6">Target ring 6</option>
-        <option value="Target puta">Target puta</option>
-        <option value="Mega mendung">Mega mendung</option>
-      </select>
-
-      <div className="mt-6">
-        <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
-        {renderSlider(jumlahTargetRusak, setJumlahTargetRusak)}
-      </div>
-
-      <label className="block mt-6 font-semibold text-lg mb-2">Info Spons Target</label>
-      <input
-        type="text"
-        value={sponsTarget}
-        onChange={(e) => setSponsTarget(e.target.value)}
-        placeholder="Contoh: bolong di tengah"
-        className="w-full border-b border-gray-600 focus:outline-none py-3 text-md"
-      />
-    </div>,
+    <StepBusur
+      key="busur"
+      busurRaw={busurRaw}
+      setBusurRaw={setBusurRaw}
+      busur={busur}
+      setBusur={setBusur}
+      jumlahBusurRusak={jumlahBusurRusak}
+      setJumlahBusurRusak={setJumlahBusurRusak}
+      kerusakanBusur={kerusakanBusur}
+      setKerusakanBusur={setKerusakanBusur}
+    />,
+    <StepArrow key="arrow" openArrowModal={openArrowModal} />,
+    <StepTarget
+      key="target"
+      faceTarget={faceTarget}
+      setFaceTarget={setFaceTarget}
+      jumlahTargetRusak={jumlahTargetRusak}
+      setJumlahTargetRusak={setJumlahTargetRusak}
+      sponsTarget={sponsTarget}
+      setSponsTarget={setSponsTarget}
+    />,
   ];
 
   // -------------------------
@@ -389,9 +275,15 @@ const App = () => {
         </div>
 
         <div className="relative flex-1 w-full overflow-hidden">
-          <div className="flex transition-transform duration-300" style={{ transform: `translateX(-${currentStep * 100}%)` }}>
+          <div
+            className="flex transition-transform duration-300"
+            style={{ transform: `translateX(-${currentStep * 100}%)` }}
+          >
             {steps.map((step, idx) => (
-              <div key={idx} className="w-full flex-shrink-0 flex flex-col overflow-y-auto px-4 md:px-6 py-4 md:py-6">
+              <div
+                key={idx}
+                className="w-full flex-shrink-0 flex flex-col overflow-y-auto px-4 md:px-6 py-4 md:py-6"
+              >
                 {step}
               </div>
             ))}
@@ -400,8 +292,16 @@ const App = () => {
 
         <div className="flex justify-center mt-2 mb-4 space-x-3">
           {steps.map((_, idx) => (
-            <div key={idx} onClick={() => setCurrentStep(idx)} className="cursor-pointer">
-              <img src={currentStep === idx ? "/pageico1.png" : "/pageico.png"} alt={`step ${idx + 1}`} className="w-5 h-5" />
+            <div
+              key={idx}
+              onClick={() => setCurrentStep(idx)}
+              className="cursor-pointer"
+            >
+              <img
+                src={currentStep === idx ? "/pageico1.png" : "/pageico.png"}
+                alt={`step ${idx + 1}`}
+                className="w-5 h-5"
+              />
             </div>
           ))}
         </div>
