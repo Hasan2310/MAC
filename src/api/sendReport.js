@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   try {
     const response = await fetch(GAS_URL, {
       method: "POST",
+      cors: "no-cors",
       headers: {
         "Content-Type": "application/json",
       },
