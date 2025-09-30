@@ -1,25 +1,40 @@
 import React from "react";
+import ArrowOptionCard from "./ArrowOptionCard";
 
-const StepArrow = ({ openArrowModal }) => (
-  <div>
-    <label className="block font-semibold text-lg mb-5">Arrow</label>
-    <div className="grid grid-cols-2 gap-4">
-      <div
-        className="flex flex-col items-center border p-3 rounded-lg shadow cursor-pointer hover:bg-gray-100 py-20"
+const StepArrow = ({ openArrowModal, arrowWood, arrowCarbon }) => {
+  const woodJumlah = arrowWood?.jumlah ?? 0;
+  const carbonVanesJumlah = arrowCarbon?.vanes?.jumlah ?? 0;
+  const carbonTorbaJumlah = arrowCarbon?.torba?.jumlah ?? 0;
+
+  return (
+    <div className="">
+      <div className="text-lg font-semibold mb-4">Pilih Jenis Arrow</div>
+
+      <div className="grid grid-cols-2 gap-4">
+      <ArrowOptionCard
+        option="Arrow Wood"
+        arrow={{
+          jumlah: woodJumlah,
+          selected: arrowWood?.selected ?? false,
+          imgFilled: arrowWood?.imgFilled || "/wood1.png",
+          imgEmpty: arrowWood?.imgEmpty || "/wood.png",
+        }}
         onClick={() => openArrowModal("Arrow Wood")}
-      >
-        <img src="/wood.png" alt="Arrow Wood" className="w-16 h-16 object-contain" />
-        <span className="mt-2 font-medium">Arrow Wood</span>
-      </div>
-      <div
-        className="flex flex-col items-center border p-3 rounded-lg shadow cursor-pointer hover:bg-gray-100 py-20"
+      />
+
+      <ArrowOptionCard
+        option="Arrow Carbon"
+        arrow={{
+          jumlah: carbonVanesJumlah + carbonTorbaJumlah,
+          selected: arrowCarbon?.selected ?? false,
+          imgFilled: arrowCarbon?.imgFilled || "/carbon1.png",
+          imgEmpty: arrowCarbon?.imgEmpty || "/carbon.png",
+        }}
         onClick={() => openArrowModal("Arrow Carbon")}
-      >
-        <img src="/carbon.png" alt="Arrow Carbon" className="w-16 h-16 object-contain" />
-        <span className="mt-2 font-medium">Arrow Carbon</span>
+      />
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default StepArrow;

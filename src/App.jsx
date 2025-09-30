@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useState, useRef, useEffect } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -28,13 +29,18 @@ const App = () => {
   const [kerusakanBusur, setKerusakanBusur] = useState("");
 
   // Step 2 (arrow)
-  const [arrowWood, setArrowWood] = useState({ jumlah: 0, info: "" });
+  const [arrowWood, setArrowWood] = useState({ jumlah: 0, info: "", selected: false });
   const [arrowCarbon, setArrowCarbon] = useState({
     vanes: { jumlah: 0, info: "" },
     torba: { jumlah: 0, info: "" },
+    selected: false,
   });
 
-  // STOCK (ambil dari Google Sheets)
+  // Step 3 (target)
+  const [faceTarget, setFaceTarget] = useState("");
+  const [jumlahTargetRusak, setJumlahTargetRusak] = useState(0);
+  const [sponsTarget, setSponsTarget] = useState("");
+
   const [stock, setStock] = useState({
     wood: 0,
     carbonVanes: 0,
@@ -43,16 +49,11 @@ const App = () => {
     targetLimits: { ring5: 0, ring6: 0 },
   });
 
-  // Step 3 (target)
-  const [faceTarget, setFaceTarget] = useState("");
-  const [jumlahTargetRusak, setJumlahTargetRusak] = useState(0);
-  const [sponsTarget, setSponsTarget] = useState("");
-
   const [isLoading, setIsLoading] = useState(false);
   const touchStartX = useRef(0);
 
   // -------------------------
-  // GET STOCK from Google Sheet (auto refresh tiap 5 detik)
+  // GET STOCK from Google Sheet (refresh tiap 5 detik)
   // -------------------------
   useEffect(() => {
     let mounted = true;
@@ -80,21 +81,19 @@ const App = () => {
       }
     };
 
-    fetchStock(); // initial fetch
-    const interval = setInterval(fetchStock, 5000); // refresh tiap 5 detik
+    fetchStock();
+    const interval = setInterval(fetchStock, 5000);
     return () => {
       mounted = false;
       clearInterval(interval);
     };
   }, []);
 
-  // clamp jumlahBusurRusak jika stock.busurMax berubah / user melebihi
   useEffect(() => {
     const max = Number(stock.busurMax) || 25;
     if (jumlahBusurRusak > max) setJumlahBusurRusak(max);
   }, [stock.busurMax]);
 
-  // clamp jumlahTargetRusak sesuai faceTarget limit
   useEffect(() => {
     const max =
       faceTarget === "Target ring 5"
@@ -105,17 +104,10 @@ const App = () => {
     if (jumlahTargetRusak > max) setJumlahTargetRusak(max);
   }, [faceTarget, stock.targetLimits]);
 
-  // -------------------------
-  // Open arrow modal
-  // -------------------------
   const openArrowModal = async (type) => {
     if (type === "Arrow Wood") {
       await MySwal.fire({
-        title: (
-          <span className="text-xl font-semibold text-[#233975] text-left">
-            Arrow Wood
-          </span>
-        ),
+        title: <span className="text-xl font-semibold text-[#233975] text-left">Arrow Wood</span>,
         html: (
           <div className="text-left">
             <ArrowModalContent
@@ -130,23 +122,21 @@ const App = () => {
         showConfirmButton: false,
         allowOutsideClick: true,
         willClose: () => {
-          const jumlah = parseInt(
-            document.getElementById("woodJumlah")?.value || "0",
-            10
-          );
+          const jumlah = parseInt(document.getElementById("woodJumlah")?.value || "0", 10);
           const info = document.getElementById("woodInfo")?.value || "";
-          setArrowWood({ jumlah: isNaN(jumlah) ? 0 : jumlah, info });
+
+          setArrowWood({
+            jumlah: isNaN(jumlah) ? 0 : jumlah,
+            info,
+            selected: jumlah > 0,
+          });
         },
       });
     }
 
     if (type === "Arrow Carbon") {
       await MySwal.fire({
-        title: (
-          <span className="text-xl font-semibold text-[#233975] text-left">
-            Arrow Carbon
-          </span>
-        ),
+        title: <span className="text-xl font-semibold text-[#233975] text-left">Arrow Carbon</span>,
         html: (
           <div className="flex flex-col gap-4 text-left">
             <div>
@@ -175,52 +165,25 @@ const App = () => {
         showConfirmButton: false,
         allowOutsideClick: true,
         willClose: () => {
-          const vanesJumlah = parseInt(
-            document.getElementById("carbonVanesJumlah")?.value || "0",
-            10
-          );
-          const vanesInfo =
-            document.getElementById("carbonVanesInfo")?.value || "";
+          const vanesJumlah = parseInt(document.getElementById("carbonVanesJumlah")?.value || "0", 10);
+          const vanesInfo = document.getElementById("carbonVanesInfo")?.value || "";
 
-          const torbaJumlah = parseInt(
-            document.getElementById("carbonTorbaJumlah")?.value || "0",
-            10
-          );
-          const torbaInfo =
-            document.getElementById("carbonTorbaInfo")?.value || "";
+          const torbaJumlah = parseInt(document.getElementById("carbonTorbaJumlah")?.value || "0", 10);
+          const torbaInfo = document.getElementById("carbonTorbaInfo")?.value || "";
 
           setArrowCarbon({
             vanes: { jumlah: isNaN(vanesJumlah) ? 0 : vanesJumlah, info: vanesInfo },
             torba: { jumlah: isNaN(torbaJumlah) ? 0 : torbaJumlah, info: torbaInfo },
+            selected: vanesJumlah > 0 || torbaJumlah > 0,
           });
         },
       });
     }
   };
 
-  // -------------------------
-  // Swipe handlers
-  // -------------------------
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-    setOffsetX(0);
-  };
-  const handleTouchMove = (e) =>
-    setOffsetX(e.touches[0].clientX - touchStartX.current);
-  const handleTouchEnd = () => {
-    if (offsetX < -50 && currentStep < steps.length - 1)
-      setCurrentStep((s) => s + 1);
-    else if (offsetX > 50 && currentStep > 0) setCurrentStep((s) => s - 1);
-    setOffsetX(0);
-  };
-
-  // -------------------------
-  // Submit
-  // -------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // buat arrowData supaya GAS kebaca (compat dengan doPost)
     const arrowData = [
       { name: "Arrow Wood", jumlah: Number(arrowWood.jumlah || 0), info: arrowWood.info || "" },
       { name: "Arrow Vanes", jumlah: Number(arrowCarbon.vanes.jumlah || 0), info: arrowCarbon.vanes.info || "" },
@@ -233,7 +196,7 @@ const App = () => {
       kerusakanBusur,
       arrowWood,
       arrowCarbon,
-      arrowData, // penting — doPost bakal prefer arrowData
+      arrowData,
       faceTarget,
       jumlahTargetRusak,
       sponsTarget,
@@ -254,10 +217,9 @@ Arrow Carbon:
         body: JSON.stringify(formData),
       });
       if (!res.ok) throw new Error("Network response not ok");
+
       const result = await res.json();
-      const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(
-        result.message + "\n\n" + arrowReport
-      )}`;
+      const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(result.message + "\n\n" + arrowReport)}`;
       setIsLoading(false);
 
       Swal.fire({
@@ -274,10 +236,11 @@ Arrow Carbon:
       setBusurRaw("");
       setJumlahBusurRusak(0);
       setKerusakanBusur("");
-      setArrowWood({ jumlah: 0, info: "" });
+      setArrowWood({ jumlah: 0, info: "", selected: false });
       setArrowCarbon({
         vanes: { jumlah: 0, info: "" },
         torba: { jumlah: 0, info: "" },
+        selected: false,
       });
       setFaceTarget("");
       setJumlahTargetRusak(0);
@@ -294,9 +257,17 @@ Arrow Carbon:
     }
   };
 
-  // -------------------------
-  // Steps
-  // -------------------------
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    setOffsetX(0);
+  };
+  const handleTouchMove = (e) => setOffsetX(e.touches[0].clientX - touchStartX.current);
+  const handleTouchEnd = () => {
+    if (offsetX < -50 && currentStep < steps.length - 1) setCurrentStep((s) => s + 1);
+    else if (offsetX > 50 && currentStep > 0) setCurrentStep((s) => s - 1);
+    setOffsetX(0);
+  };
+
   const steps = [
     <StepBusur
       key="busur"
@@ -310,7 +281,12 @@ Arrow Carbon:
       setKerusakanBusur={setKerusakanBusur}
       maxBusur={stock.busurMax}
     />,
-    <StepArrow key="arrow" openArrowModal={openArrowModal} />,
+    <StepArrow
+      key="arrow"
+      openArrowModal={openArrowModal}
+      arrowWood={arrowWood}
+      arrowCarbon={arrowCarbon}
+    />,
     <StepTarget
       key="target"
       faceTarget={faceTarget}
@@ -323,9 +299,6 @@ Arrow Carbon:
     />,
   ];
 
-  // -------------------------
-  // Render
-  // -------------------------
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <form
@@ -344,15 +317,9 @@ Arrow Carbon:
         </div>
 
         <div className="relative flex-1 w-full overflow-hidden">
-          <div
-            className="flex transition-transform duration-300"
-            style={{ transform: `translateX(-${currentStep * 100}%)` }}
-          >
+          <div className="flex transition-transform duration-300" style={{ transform: `translateX(-${currentStep * 100}%)` }}>
             {steps.map((step, idx) => (
-              <div
-                key={idx}
-                className="w-full flex-shrink-0 flex flex-col overflow-y-auto px-4 md:px-6 py-4 md:py-6"
-              >
+              <div key={idx} className="w-full flex-shrink-0 flex flex-col overflow-y-auto px-4 md:px-6 py-4 md:py-6">
                 {step}
               </div>
             ))}
@@ -361,11 +328,7 @@ Arrow Carbon:
 
         <div className="flex justify-center mt-2 mb-4 space-x-3">
           {steps.map((_, idx) => (
-            <div
-              key={idx}
-              onClick={() => setCurrentStep(idx)}
-              className="cursor-pointer"
-            >
+            <div key={idx} onClick={() => setCurrentStep(idx)} className="cursor-pointer">
               <img
                 src={currentStep === idx ? "/pageico1.png" : "/pageico.png"}
                 alt={`step ${idx + 1}`}

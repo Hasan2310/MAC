@@ -57,7 +57,7 @@ const ArrowModalContent = ({
             if (n > maxStock) n = maxStock;
             setVal(n);
           }}
-          className="w-20 text-center border border-gray-300 rounded py-1"
+          className="w-20 text-center rounded py-1"
         />
       </div>
 
@@ -72,7 +72,7 @@ const ArrowModalContent = ({
         value={info}
         onChange={(e) => setInfo(e.target.value)}
         placeholder="Contoh: fletching copot"
-        className="w-full border-b border-gray-600 focus:outline-none py-1 -mt-"
+        className="w-full border-b border-gray-600 focus:outline-none py-1 -mt-1"
       />
     </div>
   );
