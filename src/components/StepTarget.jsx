@@ -20,8 +20,8 @@ const StepTarget = ({
       <option value="">-- Pilih Target --</option>
       <option value="Target ring 5">Target ring 5</option>
       <option value="Target ring 6">Target ring 6</option>
-      <option value="Target puta">Target puta</option>
-      <option value="Mega mendung">Mega mendung</option>
+      {/* <option value="Target puta">Target puta</option>
+      <option value="Mega mendung">Mega mendung</option> */}
     </select>
 
     <div className="mt-6">
@@ -32,7 +32,7 @@ const StepTarget = ({
         max={
           faceTarget === "Target ring 5" ? targetLimits.ring5 :
           faceTarget === "Target ring 6" ? targetLimits.ring6 :
-          25
+          0
         }
       />
     </div>
