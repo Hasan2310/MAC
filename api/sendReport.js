@@ -9,7 +9,7 @@ export default async function handler(req, res) {
       "https://script.google.com/macros/s/AKfycbwCO5Qs2cozq4zuHYUpYgjnf65nD0G0C8HkNN9IXXPD3_CKkk-5HjyQJEn3SogDoyxdmw/exec", // ganti dengan ID GAS kamu
       {
         method: "POST",
-        cors: "no-cors",
+        cors:
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(req.body),
       }

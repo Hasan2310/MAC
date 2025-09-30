@@ -51,7 +51,7 @@ const App = () => {
   useEffect(() => {
     const fetchStock = async () => {
       try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbxxxxxxx/exec"); // ← Ganti dengan URL kamu
+        const res = await fetch("https://script.google.com/macros/s/AKfycbwCO5Qs2cozq4zuHYUpYgjnf65nD0G0C8HkNN9IXXPD3_CKkk-5HjyQJEn3SogDoyxdmw/exec"); // ← Ganti dengan URL kamu
         const data = await res.json();
         setStock((prev) => ({ ...prev, wood: Number(data.wood) || 0 }));
       } catch (error) {
