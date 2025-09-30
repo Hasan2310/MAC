@@ -48,20 +48,19 @@ const App = () => {
   // -------------------------
   // GET STOCK from Google Sheet (F5)
   // -------------------------
-useEffect(() => {
-  const fetchStock = async () => {
-    try {
-      const res = await fetch("./api/fetchStock");
-      const data = await res.json();
-      setStock((prev) => ({ ...prev, wood: Number(data.wood) || 0 }));
-    } catch (error) {
-      console.error("Gagal ambil data stock:", error);
-    }
-  };
+  useEffect(() => {
+    const fetchStock = async () => {
+      try {
+        const res = await fetch("/api/fetchStock");
+        const data = await res.json();
+        setStock((prev) => ({ ...prev, wood: Number(data.wood) || 0 }));
+      } catch (error) {
+        console.error("Gagal ambil data stock:", error);
+      }
+    };
 
-  fetchStock();
-}, []);
-
+    fetchStock();
+  }, []);
 
   // -------------------------
   // Open arrow modal
@@ -199,7 +198,7 @@ Arrow Carbon:
 
     try {
       setIsLoading(true);
-      const res = await fetch("./api/sendReport", {
+      const res = await fetch("/api/sendReport", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
