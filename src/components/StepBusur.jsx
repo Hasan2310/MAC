@@ -10,7 +10,7 @@ const StepBusur = ({
   setJumlahBusurRusak,
   kerusakanBusur,
   setKerusakanBusur,
-  maxBusur = 25,
+  maxBusur = 0,
 }) => (
   <div>
     <label className="block font-semibold text-lg mb-2">Busur</label>

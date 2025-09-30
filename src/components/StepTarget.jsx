@@ -8,7 +8,7 @@ const StepTarget = ({
   setJumlahTargetRusak,
   sponsTarget,
   setSponsTarget,
-  targetLimits = { ring5: 25, ring6: 25 },
+  targetLimits = { ring5: 0, ring6: 0 },
 }) => {
   // clamp local if limit changes
   useEffect(() => {
