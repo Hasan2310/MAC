@@ -1,7 +1,15 @@
 import React from "react";
 import SliderInput from "./SliderInput";
 
-const StepTarget = ({ faceTarget, setFaceTarget, jumlahTargetRusak, setJumlahTargetRusak, sponsTarget, setSponsTarget }) => (
+const StepTarget = ({
+  faceTarget,
+  setFaceTarget,
+  jumlahTargetRusak,
+  setJumlahTargetRusak,
+  sponsTarget,
+  setSponsTarget,
+  targetLimits
+}) => (
   <div>
     <label className="block font-semibold text-lg mb-2">Face Target</label>
     <select
@@ -18,7 +26,15 @@ const StepTarget = ({ faceTarget, setFaceTarget, jumlahTargetRusak, setJumlahTar
 
     <div className="mt-6">
       <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
-      <SliderInput value={jumlahTargetRusak} setValue={setJumlahTargetRusak} max={25} />
+      <SliderInput
+        value={jumlahTargetRusak}
+        setValue={setJumlahTargetRusak}
+        max={
+          faceTarget === "Target ring 5" ? targetLimits.ring5 :
+          faceTarget === "Target ring 6" ? targetLimits.ring6 :
+          25
+        }
+      />
     </div>
 
     <label className="block mt-6 font-semibold text-lg mb-2">Info Spons Target</label>

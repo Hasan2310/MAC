@@ -33,8 +33,10 @@ const App = () => {
   // STOCK (ambil dari Google Sheets)
   const [stock, setStock] = useState({
     wood: 0,
-    carbonVanes: 0,
-    carbonTorba: 0,
+    carbonVanes: 50,
+    carbonTorba: 20,
+    busurMax: 25,
+    targetLimits: { ring5: 25, ring6: 25 }
   });
 
   // Step 3 (target)
@@ -45,32 +47,34 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const touchStartX = useRef(0);
 
-// -------------------------
-// GET STOCK from Google Sheet (auto refresh tiap 5 detik)
-// -------------------------
-useEffect(() => {
-  const fetchStock = async () => {
-    try {
-      const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbwHNHEFSZLrz6TCC1BIpa7ZPvIFdbxxIdLU6DYYmLyQW8DT9DxqpjFsTgrVtzBlIFXzaw/exec?ts=" +
-          Date.now(),
-        { cache: "no-store" }
-      );
-      const data = await res.json();
-      setStock({
-        wood: Number(data.wood) || 0,
-        carbonTorba: Number(data.carbonTorba) || 0,
-        carbonVanes: Number(data.carbonVanes) || 0,
-      });
-    } catch (error) {
-      console.error("Gagal ambil data stock:", error);
-    }
-  };
+  // -------------------------
+  // GET STOCK from Google Sheet (auto refresh tiap 5 detik)
+  // -------------------------
+  useEffect(() => {
+    const fetchStock = async () => {
+      try {
+        const res = await fetch(
+          "https://script.google.com/macros/s/AKfycby_CUQWNBgHyMWBuRN7FkMTD4lIoOhfs3A1hz2fwCu0AujpYkY-k4GoduuTYj6-pD3pjg/exec?ts=" +
+            Date.now(),
+          { cache: "no-store" }
+        );
+        const data = await res.json();
+        setStock({
+          wood: Number(data.wood) || 0,
+          carbonVanes: Number(data.carbonVanes) || 0,
+          carbonTorba: Number(data.carbonTorba) || 0,
+          busurMax: Number(data.busurMax) || 25,
+          targetLimits: data.targetLimits || { ring5: 25, ring6: 25 }
+        });
+      } catch (error) {
+        console.error("Gagal ambil data stock:", error);
+      }
+    };
 
-  fetchStock(); // initial fetch
-  const interval = setInterval(fetchStock, 5000); // refresh tiap 5 detik
-  return () => clearInterval(interval);
-}, []);
+    fetchStock(); // initial fetch
+    const interval = setInterval(fetchStock, 5000); // refresh tiap 5 detik
+    return () => clearInterval(interval);
+  }, []);
 
   // -------------------------
   // Open arrow modal
@@ -209,7 +213,7 @@ Arrow Carbon:
     try {
       setIsLoading(true);
       const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbwHNHEFSZLrz6TCC1BIpa7ZPvIFdbxxIdLU6DYYmLyQW8DT9DxqpjFsTgrVtzBlIFXzaw/exec",
+        "https://script.google.com/macros/s/AKfycby_CUQWNBgHyMWBuRN7FkMTD4lIoOhfs3A1hz2fwCu0AujpYkY-k4GoduuTYj6-pD3pjg/exec",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -270,6 +274,7 @@ Arrow Carbon:
       setJumlahBusurRusak={setJumlahBusurRusak}
       kerusakanBusur={kerusakanBusur}
       setKerusakanBusur={setKerusakanBusur}
+      maxBusur={stock.busurMax}
     />,
     <StepArrow key="arrow" openArrowModal={openArrowModal} />,
     <StepTarget
@@ -280,6 +285,7 @@ Arrow Carbon:
       setJumlahTargetRusak={setJumlahTargetRusak}
       sponsTarget={sponsTarget}
       setSponsTarget={setSponsTarget}
+      targetLimits={stock.targetLimits}
     />,
   ];
 
