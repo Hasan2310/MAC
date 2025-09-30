@@ -44,7 +44,7 @@ const StepTarget = ({
       </select>
 
       <div className="mt-6">
-        <label className="font-semibold text-lg mb-2">Jumlah Rusak (max: {currentMax})</label>
+        <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
         <SliderInput value={jumlahTargetRusak} setValue={setJumlahTargetRusak} max={currentMax} />
       </div>
 

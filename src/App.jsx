@@ -69,10 +69,10 @@ const App = () => {
           wood: Number(data.wood) || 0,
           carbonVanes: Number(data.carbonVanes) || 0,
           carbonTorba: Number(data.carbonTorba) || 0,
-          busurMax: Number(data.busurMax) || 25,
+          busurMax: Number(data.busurMax) || 0,
           targetLimits: {
-            ring5: Number(data.targetLimits?.ring5) || 25,
-            ring6: Number(data.targetLimits?.ring6) || 25,
+            ring5: Number(data.targetLimits?.ring5) || 0,
+            ring6: Number(data.targetLimits?.ring6) || 0,
           },
         });
       } catch (error) {
@@ -98,10 +98,10 @@ const App = () => {
   useEffect(() => {
     const max =
       faceTarget === "Target ring 5"
-        ? Number(stock.targetLimits.ring5) || 25
+        ? Number(stock.targetLimits.ring5) || 0
         : faceTarget === "Target ring 6"
-        ? Number(stock.targetLimits.ring6) || 25
-        : 25;
+        ? Number(stock.targetLimits.ring6) || 0
+        : 0;
     if (jumlahTargetRusak > max) setJumlahTargetRusak(max);
   }, [faceTarget, stock.targetLimits]);
 
