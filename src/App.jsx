@@ -54,7 +54,7 @@ const App = () => {
     const fetchStock = async () => {
       try {
         const res = await fetch(
-          "https://script.google.com/macros/s/AKfycby_CUQWNBgHyMWBuRN7FkMTD4lIoOhfs3A1hz2fwCu0AujpYkY-k4GoduuTYj6-pD3pjg/exec?ts=" +
+          "https://script.google.com/macros/s/AKfycbzgfqXZHKwohAWu8fjS0mbKgVTGP9uH4quOu5ZpbHI7I6d6dSJF3X5oc5YZu4qxUP_tWg/exec?ts=" +
             Date.now(),
           { cache: "no-store" }
         );
@@ -213,7 +213,7 @@ Arrow Carbon:
     try {
       setIsLoading(true);
       const res = await fetch(
-        "https://script.google.com/macros/s/AKfycby_CUQWNBgHyMWBuRN7FkMTD4lIoOhfs3A1hz2fwCu0AujpYkY-k4GoduuTYj6-pD3pjg/exec",
+        "https://script.google.com/macros/s/AKfycbzgfqXZHKwohAWu8fjS0mbKgVTGP9uH4quOu5ZpbHI7I6d6dSJF3X5oc5YZu4qxUP_tWg/exec",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
