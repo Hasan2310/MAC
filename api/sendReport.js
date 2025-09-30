@@ -1,7 +1,7 @@
 // /pages/api/sendReport.js
 
 export default async function handler(req, res) {
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbw4ZxyP5dE73yRvzbE9SnypN1ij7nqhF06xQraRBy7bfaAiW6NVdScf-S7FGF-G0HzHkg/exec";
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbx9trvEtmIJw6HWJtyMoTJdPnl5SN35z4p3mlZwFE1BzOKwb227p13KY6sEyBoD34jFSw/exec";
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });

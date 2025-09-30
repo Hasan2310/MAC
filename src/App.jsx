@@ -62,6 +62,7 @@ useEffect(() => {
   fetchStock();
 }, []);
 
+
   // -------------------------
   // Open arrow modal
   // -------------------------
@@ -198,7 +199,7 @@ Arrow Carbon:
 
     try {
       setIsLoading(true);
-      const res = await fetch("/api/sendReport", {
+      const res = await fetch("./api/sendReport", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
