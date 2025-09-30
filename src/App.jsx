@@ -214,9 +214,8 @@ Arrow Carbon:
 
     try {
       setIsLoading(true);
-      const res = await fetch(WEB_APP_URL_POST, {
+      const res = await fetch("http://localhost:4000/sendReport", {
         method: "POST",
-        cors: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
