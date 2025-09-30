@@ -18,6 +18,9 @@ const MySwal = withReactContent(Swal);
 const WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbwDgEzOiyyizArsgB4nzsomp21Grv9Ks50Yix7ECkpSWX7KVzIIEN2sFPLpzSH4USySSg/exec";
 
+const WEB_APP_URL_POST =
+  "https://script.google.com/macros/s/AKfycbwDgEzOiyyizArsgB4nzsomp21Grv9Ks50Yix7ECkpSWX7KVzIIEN2sFPLpzSH4USySSg/exec";
+
 const App = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
@@ -211,7 +214,7 @@ Arrow Carbon:
 
     try {
       setIsLoading(true);
-      const res = await fetch(WEB_APP_URL, {
+      const res = await fetch("/api/sendReport", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
