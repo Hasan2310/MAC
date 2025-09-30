@@ -16,17 +16,24 @@ const StepTarget = ({
       faceTarget === "Target ring 5"
         ? Number(targetLimits.ring5) || 25
         : faceTarget === "Target ring 6"
-        ? Number(targetLimits.ring6) || 25
-        : 25;
+          ? Number(targetLimits.ring6) || 25
+          : 25;
     if (jumlahTargetRusak > max) setJumlahTargetRusak(max);
   }, [faceTarget, targetLimits]);
 
-  const currentMax =
+  const getMax =
     faceTarget === "Target ring 5"
-      ? Number(targetLimits.ring5) || 25
+      ? Number(targetLimits.ring5) || 0
       : faceTarget === "Target ring 6"
-      ? Number(targetLimits.ring6) || 25
-      : 25;
+        ? Number(targetLimits.ring6) || 0
+        : 0;
+
+  useEffect(() => {
+    const max = getMax();
+    if (jumlahTargetRusak > max) setJumlahTargetRusak(max);
+  }, [faceTarget, targetLimits]);
+
+  const currentMax = getMax();
 
   return (
     <div>
