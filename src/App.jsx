@@ -32,7 +32,7 @@ const App = () => {
 
   // STOCK (ambil dari Google Sheets)
   const [stock, setStock] = useState({
-    wood: 0,
+    wood: 25,
     carbonVanes: 50,
     carbonTorba: 20,
   });
