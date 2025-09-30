@@ -39,7 +39,7 @@ const StepBusur = ({
       <SliderInput
         value={jumlahBusurRusak}
         setValue={setJumlahBusurRusak}
-        max={Number(maxBusur) || 25}
+        max={Number(maxBusur) || 0}
       />
     </div>
 
