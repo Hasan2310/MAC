@@ -51,7 +51,7 @@ const App = () => {
   useEffect(() => {
     const fetchStock = async () => {
       try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbx9trvEtmIJw6HWJtyMoTJdPnl5SN35z4p3mlZwFE1BzOKwb227p13KY6sEyBoD34jFSw/exec");
+        const res = await fetch("https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec");
         const data = await res.json();
         setStock((prev) => ({ ...prev, wood: Number(data.wood) || 0 }));
       } catch (error) {
@@ -198,7 +198,7 @@ Arrow Carbon:
 
     try {
       setIsLoading(true);
-      const res = await fetch("https://script.google.com/macros/s/AKfycbx9trvEtmIJw6HWJtyMoTJdPnl5SN35z4p3mlZwFE1BzOKwb227p13KY6sEyBoD34jFSw/exec", {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
