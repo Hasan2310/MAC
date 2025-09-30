@@ -10,30 +10,18 @@ const StepTarget = ({
   setSponsTarget,
   targetLimits = { ring5: 0, ring6: 0 },
 }) => {
-  // clamp local if limit changes
-  useEffect(() => {
-    const max =
-      faceTarget === "Target ring 5"
-        ? Number(targetLimits.ring5) || 25
-        : faceTarget === "Target ring 6"
-          ? Number(targetLimits.ring6) || 25
-          : 25;
-    if (jumlahTargetRusak > max) setJumlahTargetRusak(max);
-  }, [faceTarget, targetLimits]);
-
-  const getMax =
+  const currentMax =
     faceTarget === "Target ring 5"
       ? Number(targetLimits.ring5) || 0
       : faceTarget === "Target ring 6"
-        ? Number(targetLimits.ring6) || 0
-        : 0;
+      ? Number(targetLimits.ring6) || 0
+      : 0;
 
   useEffect(() => {
-    const max = getMax();
-    if (jumlahTargetRusak > max) setJumlahTargetRusak(max);
-  }, [faceTarget, targetLimits]);
-
-  const currentMax = getMax();
+    if (jumlahTargetRusak > currentMax) {
+      setJumlahTargetRusak(currentMax);
+    }
+  }, [faceTarget, targetLimits, currentMax]);
 
   return (
     <div>
@@ -52,10 +40,16 @@ const StepTarget = ({
 
       <div className="mt-6">
         <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
-        <SliderInput value={jumlahTargetRusak} setValue={setJumlahTargetRusak} max={currentMax} />
+        <SliderInput
+          value={jumlahTargetRusak || 0}
+          setValue={setJumlahTargetRusak}
+          max={currentMax || 0}
+        />
       </div>
 
-      <label className="block mt-6 font-semibold text-lg mb-2">Info Spons Target</label>
+      <label className="block mt-6 font-semibold text-lg mb-2">
+        Info Spons Target
+      </label>
       <input
         type="text"
         value={sponsTarget}
