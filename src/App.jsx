@@ -45,28 +45,32 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const touchStartX = useRef(0);
 
-  // -------------------------
-  // GET STOCK from Google Sheet (auto refresh tiap 5 detik)
-  // -------------------------
-  useEffect(() => {
-    const fetchStock = async () => {
-      try {
-        const res = await fetch(
-          "https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec?ts=" +
-            Date.now(),
-          { cache: "no-store" }
-        );
-        const data = await res.json();
-        setStock((prev) => ({ ...prev, wood: Number(data.wood) || 0 }));
-      } catch (error) {
-        console.error("Gagal ambil data stock:", error);
-      }
-    };
+// -------------------------
+// GET STOCK from Google Sheet (auto refresh tiap 5 detik)
+// -------------------------
+useEffect(() => {
+  const fetchStock = async () => {
+    try {
+      const res = await fetch(
+        "https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec?ts=" +
+          Date.now(),
+        { cache: "no-store" }
+      );
+      const data = await res.json();
+      setStock({
+        wood: Number(data.wood) || 0,
+        carbonTorba: Number(data.carbonTorba) || 0,
+        carbonVanes: Number(data.carbonVanes) || 0,
+      });
+    } catch (error) {
+      console.error("Gagal ambil data stock:", error);
+    }
+  };
 
-    fetchStock(); // initial fetch
-    const interval = setInterval(fetchStock, 5000); // refresh tiap 5 detik
-    return () => clearInterval(interval);
-  }, []);
+  fetchStock(); // initial fetch
+  const interval = setInterval(fetchStock, 5000); // refresh tiap 5 detik
+  return () => clearInterval(interval);
+}, []);
 
   // -------------------------
   // Open arrow modal
