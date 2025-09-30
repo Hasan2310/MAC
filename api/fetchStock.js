@@ -1,21 +1,12 @@
-// /pages/api/sendReport.js
-
 export default async function handler(req, res) {
   const GAS_URL = "https://script.google.com/macros/s/AKfycbyazx4loJzXwmMlTI7O8neWYt1Cvz1ZuA6GNy86sJAFinkyRTgnsentl8ghBIkdvxd7cA/exec";
 
-  if (req.method !== "POST") {
+  if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const response = await fetch(GAS_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(req.body),
-    });
-
+    const response = await fetch(GAS_URL);
     if (!response.ok) {
       const text = await response.text();
       throw new Error(`GAS error: ${response.status} - ${text}`);
@@ -24,7 +15,7 @@ export default async function handler(req, res) {
     const data = await response.json();
     return res.status(200).json(data);
   } catch (err) {
-    console.error("Gagal kirim ke GAS:", err.message);
-    return res.status(500).json({ error: "Failed to send data to GAS" });
+    console.error("Gagal fetch dari GAS:", err.message);
+    return res.status(500).json({ error: "Failed to fetch data from GAS" });
   }
 }

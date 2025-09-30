@@ -48,19 +48,19 @@ const App = () => {
   // -------------------------
   // GET STOCK from Google Sheet (F5)
   // -------------------------
-  useEffect(() => {
-    const fetchStock = async () => {
-      try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbyazx4loJzXwmMlTI7O8neWYt1Cvz1ZuA6GNy86sJAFinkyRTgnsentl8ghBIkdvxd7cA/exec"); // ← Ganti dengan URL kamu
-        const data = await res.json();
-        setStock((prev) => ({ ...prev, wood: Number(data.wood) || 0 }));
-      } catch (error) {
-        console.error("Gagal ambil data stock:", error);
-      }
-    };
+useEffect(() => {
+  const fetchStock = async () => {
+    try {
+      const res = await fetch("./api/fetchStock");
+      const data = await res.json();
+      setStock((prev) => ({ ...prev, wood: Number(data.wood) || 0 }));
+    } catch (error) {
+      console.error("Gagal ambil data stock:", error);
+    }
+  };
 
-    fetchStock();
-  }, []);
+  fetchStock();
+}, []);
 
   // -------------------------
   // Open arrow modal
