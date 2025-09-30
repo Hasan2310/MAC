@@ -33,8 +33,8 @@ const App = () => {
   // STOCK (ambil dari Google Sheets)
   const [stock, setStock] = useState({
     wood: 0,
-    carbonVanes: 50,
-    carbonTorba: 20,
+    carbonVanes: 0,
+    carbonTorba: 0,
   });
 
   // Step 3 (target)
@@ -52,7 +52,7 @@ useEffect(() => {
   const fetchStock = async () => {
     try {
       const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec?ts=" +
+        "https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/https://script.google.com/macros/s/AKfycbwHNHEFSZLrz6TCC1BIpa7ZPvIFdbxxIdLU6DYYmLyQW8DT9DxqpjFsTgrVtzBlIFXzaw/exec?ts=" +
           Date.now(),
         { cache: "no-store" }
       );
@@ -209,7 +209,7 @@ Arrow Carbon:
     try {
       setIsLoading(true);
       const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec",
+        "https://script.google.com/macros/s/AKfycbwHNHEFSZLrz6TCC1BIpa7ZPvIFdbxxIdLU6DYYmLyQW8DT9DxqpjFsTgrVtzBlIFXzaw/exec",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
