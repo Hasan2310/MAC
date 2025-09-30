@@ -33,10 +33,10 @@ const App = () => {
   // STOCK (ambil dari Google Sheets)
   const [stock, setStock] = useState({
     wood: 0,
-    carbonVanes: 0,
-    carbonTorba: 0,
-    busurMax: 0,
-    targetLimits: { ring5: 0, ring6: 0 }
+    carbonVanes: 50,
+    carbonTorba: 20,
+    busurMax: 25,
+    targetLimits: { ring5: 25, ring6: 25 }
   });
 
   // Step 3 (target)
