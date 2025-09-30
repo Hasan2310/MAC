@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -30,12 +30,12 @@ const App = () => {
     torba: { jumlah: 0, info: "" },
   });
 
-  // Inventori arrow maksimum
-  const stock = {
-    wood: 30,
+  // STOCK (ambil dari Google Sheets)
+  const [stock, setStock] = useState({
+    wood: 0,
     carbonVanes: 50,
     carbonTorba: 20,
-  };
+  });
 
   // Step 3 (target)
   const [faceTarget, setFaceTarget] = useState("");
@@ -46,98 +46,114 @@ const App = () => {
   const touchStartX = useRef(0);
 
   // -------------------------
+  // GET STOCK from Google Sheet (F5)
+  // -------------------------
+  useEffect(() => {
+    const fetchStock = async () => {
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbxxxxxxx/exec"); // ← Ganti dengan URL kamu
+        const data = await res.json();
+        setStock((prev) => ({ ...prev, wood: Number(data.wood) || 0 }));
+      } catch (error) {
+        console.error("Gagal ambil data stock:", error);
+      }
+    };
+
+    fetchStock();
+  }, []);
+
+  // -------------------------
   // Open arrow modal
   // -------------------------
-const openArrowModal = async (type) => {
-  if (type === "Arrow Wood") {
-    await MySwal.fire({
-      title: (
-        <span className="text-xl font-semibold text-[#233975] text-left">
-          Arrow Wood
-        </span>
-      ),
-      html: (
-        <div className="text-left">
-          <ArrowModalContent
-            initial={arrowWood.jumlah}
-            inputId="woodJumlah"
-            initialInfo={arrowWood.info}
-            infoId="woodInfo"
-            maxStock={stock.wood}
-          />
-        </div>
-      ),
-      showConfirmButton: false,
-      allowOutsideClick: true,
-      willClose: () => {
-        const jumlah = parseInt(
-          document.getElementById("woodJumlah")?.value || "0",
-          10
-        );
-        const info = document.getElementById("woodInfo")?.value || "";
-        setArrowWood({ jumlah, info });
-      },
-    });
-  }
-
-  if (type === "Arrow Carbon") {
-    await MySwal.fire({
-      title: (
-        <span className="text-xl font-semibold text-[#233975] text-left">
-          Arrow Carbon
-        </span>
-      ),
-      html: (
-        <div className="flex flex-col gap-4 text-left">
-          <div>
-            <p className="font-semibold mb-2 text-[#233975]">Vanes</p>
+  const openArrowModal = async (type) => {
+    if (type === "Arrow Wood") {
+      await MySwal.fire({
+        title: (
+          <span className="text-xl font-semibold text-[#233975] text-left">
+            Arrow Wood
+          </span>
+        ),
+        html: (
+          <div className="text-left">
             <ArrowModalContent
-              initial={arrowCarbon.vanes.jumlah}
-              inputId="carbonVanesJumlah"
-              initialInfo={arrowCarbon.vanes.info}
-              infoId="carbonVanesInfo"
-              maxStock={stock.carbonVanes}
+              initial={arrowWood.jumlah}
+              inputId="woodJumlah"
+              initialInfo={arrowWood.info}
+              infoId="woodInfo"
+              maxStock={stock.wood}
             />
           </div>
-          <div>
-            <p className="font-semibold mb-2 text-[#233975]">Torba</p>
-            <ArrowModalContent
-              initial={arrowCarbon.torba.jumlah}
-              inputId="carbonTorbaJumlah"
-              initialInfo={arrowCarbon.torba.info}
-              infoId="carbonTorbaInfo"
-              maxStock={stock.carbonTorba}
-            />
+        ),
+        showConfirmButton: false,
+        allowOutsideClick: true,
+        willClose: () => {
+          const jumlah = parseInt(
+            document.getElementById("woodJumlah")?.value || "0",
+            10
+          );
+          const info = document.getElementById("woodInfo")?.value || "";
+          setArrowWood({ jumlah, info });
+        },
+      });
+    }
+
+    if (type === "Arrow Carbon") {
+      await MySwal.fire({
+        title: (
+          <span className="text-xl font-semibold text-[#233975] text-left">
+            Arrow Carbon
+          </span>
+        ),
+        html: (
+          <div className="flex flex-col gap-4 text-left">
+            <div>
+              <p className="font-semibold mb-2 text-[#233975]">Vanes</p>
+              <ArrowModalContent
+                initial={arrowCarbon.vanes.jumlah}
+                inputId="carbonVanesJumlah"
+                initialInfo={arrowCarbon.vanes.info}
+                infoId="carbonVanesInfo"
+                maxStock={stock.carbonVanes}
+              />
+            </div>
+            <div>
+              <p className="font-semibold mb-2 text-[#233975]">Torba</p>
+              <ArrowModalContent
+                initial={arrowCarbon.torba.jumlah}
+                inputId="carbonTorbaJumlah"
+                initialInfo={arrowCarbon.torba.info}
+                infoId="carbonTorbaInfo"
+                maxStock={stock.carbonTorba}
+              />
+            </div>
           </div>
-        </div>
-      ),
-      width: 600,
-      showConfirmButton: false,
-      allowOutsideClick: true,
-      willClose: () => {
-        const vanesJumlah = parseInt(
-          document.getElementById("carbonVanesJumlah")?.value || "0",
-          10
-        );
-        const vanesInfo =
-          document.getElementById("carbonVanesInfo")?.value || "";
+        ),
+        width: 600,
+        showConfirmButton: false,
+        allowOutsideClick: true,
+        willClose: () => {
+          const vanesJumlah = parseInt(
+            document.getElementById("carbonVanesJumlah")?.value || "0",
+            10
+          );
+          const vanesInfo =
+            document.getElementById("carbonVanesInfo")?.value || "";
 
-        const torbaJumlah = parseInt(
-          document.getElementById("carbonTorbaJumlah")?.value || "0",
-          10
-        );
-        const torbaInfo =
-          document.getElementById("carbonTorbaInfo")?.value || "";
+          const torbaJumlah = parseInt(
+            document.getElementById("carbonTorbaJumlah")?.value || "0",
+            10
+          );
+          const torbaInfo =
+            document.getElementById("carbonTorbaInfo")?.value || "";
 
-        setArrowCarbon({
-          vanes: { jumlah: vanesJumlah, info: vanesInfo },
-          torba: { jumlah: torbaJumlah, info: torbaInfo },
-        });
-      },
-    });
-  }
-};
-
+          setArrowCarbon({
+            vanes: { jumlah: vanesJumlah, info: vanesInfo },
+            torba: { jumlah: torbaJumlah, info: torbaInfo },
+          });
+        },
+      });
+    }
+  };
 
   // -------------------------
   // Swipe handlers
