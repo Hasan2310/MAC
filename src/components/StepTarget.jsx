@@ -14,19 +14,19 @@ const StepTarget = ({
   useEffect(() => {
     const max =
       faceTarget === "Target ring 5"
-        ? Number(targetLimits.ring5) || 0
+        ? Number(targetLimits.ring5) || 25
         : faceTarget === "Target ring 6"
-        ? Number(targetLimits.ring6) || 0
-        : 0;
+        ? Number(targetLimits.ring6) || 25
+        : 25;
     if (jumlahTargetRusak > max) setJumlahTargetRusak(max);
   }, [faceTarget, targetLimits]);
 
   const currentMax =
     faceTarget === "Target ring 5"
-      ? Number(targetLimits.ring5) || 0
+      ? Number(targetLimits.ring5) || 25
       : faceTarget === "Target ring 6"
-      ? Number(targetLimits.ring6) || 0
-      : 0;
+      ? Number(targetLimits.ring6) || 25
+      : 25;
 
   return (
     <div>
