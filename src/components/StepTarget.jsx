@@ -39,8 +39,8 @@ const StepTarget = ({
         <option value="">-- Pilih Target --</option>
         <option value="Target ring 5">Target ring 5</option>
         <option value="Target ring 6">Target ring 6</option>
-        <option value="Target puta">Target puta</option>
-        <option value="Mega mendung">Mega mendung</option>
+        {/* <option value="Target puta">Target puta</option>
+        <option value="Mega mendung">Mega mendung</option> */}
       </select>
 
       <div className="mt-6">
