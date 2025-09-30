@@ -46,12 +46,16 @@ const App = () => {
   const touchStartX = useRef(0);
 
   // -------------------------
-  // GET STOCK from Google Sheet (F5)
+  // GET STOCK from Google Sheet (auto refresh tiap 5 detik)
   // -------------------------
   useEffect(() => {
     const fetchStock = async () => {
       try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec");
+        const res = await fetch(
+          "https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec?ts=" +
+            Date.now(),
+          { cache: "no-store" }
+        );
         const data = await res.json();
         setStock((prev) => ({ ...prev, wood: Number(data.wood) || 0 }));
       } catch (error) {
@@ -59,7 +63,9 @@ const App = () => {
       }
     };
 
-    fetchStock();
+    fetchStock(); // initial fetch
+    const interval = setInterval(fetchStock, 5000); // refresh tiap 5 detik
+    return () => clearInterval(interval);
   }, []);
 
   // -------------------------
@@ -198,11 +204,14 @@ Arrow Carbon:
 
     try {
       setIsLoading(true);
-      const res = await fetch("https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        "https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/exec",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
       const result = await res.json();
       const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(
         result.message + "\n\n" + arrowReport
