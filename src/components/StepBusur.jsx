@@ -10,7 +10,7 @@ const StepBusur = ({
   setJumlahBusurRusak,
   kerusakanBusur,
   setKerusakanBusur,
-  maxBusur
+  BusurMax
 }) => (
   <div>
     <label className="block font-semibold text-lg mb-2">Busur</label>
@@ -39,7 +39,7 @@ const StepBusur = ({
       <SliderInput
         value={jumlahBusurRusak}
         setValue={setJumlahBusurRusak}
-        max={maxBusur}
+        max={busurMax}
       />
     </div>
 

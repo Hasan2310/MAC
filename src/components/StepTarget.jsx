@@ -32,7 +32,7 @@ const StepTarget = ({
         max={
           faceTarget === "Target ring 5" ? targetLimits.ring5 :
           faceTarget === "Target ring 6" ? targetLimits.ring6 :
-          0
+          20
         }
       />
     </div>
