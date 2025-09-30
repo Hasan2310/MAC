@@ -35,7 +35,7 @@ const StepBusur = ({
     </div>
 
     <div className="mt-6">
-      <label className="font-semibold text-lg mb-2">Jumlah Rusak </label>
+      <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
       <SliderInput
         value={jumlahBusurRusak}
         setValue={setJumlahBusurRusak}
