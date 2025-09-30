@@ -14,8 +14,8 @@ const StepTarget = ({
     faceTarget === "Target ring 5"
       ? Number(targetLimits.ring5) || 0
       : faceTarget === "Target ring 6"
-      ? Number(targetLimits.ring6) || 0
-      : 0;
+        ? Number(targetLimits.ring6) || 0
+        : 0;
 
   useEffect(() => {
     if (jumlahTargetRusak > currentMax) {
@@ -40,11 +40,17 @@ const StepTarget = ({
 
       <div className="mt-6">
         <label className="font-semibold text-lg mb-2">Jumlah Rusak</label>
-        <SliderInput
-          value={jumlahTargetRusak || 0}
-          setValue={setJumlahTargetRusak}
-          max={currentMax || 0}
-        />
+        {currentMax > 0 ? (
+          <SliderInput
+            value={jumlahTargetRusak || 0}
+            setValue={setJumlahTargetRusak}
+            max={currentMax}
+          />
+        ) : (
+          <p className="text-gray-500 italic text-sm">
+            Maksimum target tidak tersedia
+          </p>
+        )}
       </div>
 
       <label className="block mt-6 font-semibold text-lg mb-2">
