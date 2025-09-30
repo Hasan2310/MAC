@@ -13,6 +13,10 @@ import ArrowModalContent from "./components/ArrowModalContent";
 
 const MySwal = withReactContent(Swal);
 
+// ganti URL ini kalau lo pake web app URL lain
+const WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbz-L4rMpMaxOOVIFyIQHIRyFDW0SrQAq1Lq24EH2c-fY9kDZXPij-0h9lr8UZxBjFxc/exec";
+
 const App = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
@@ -33,10 +37,10 @@ const App = () => {
   // STOCK (ambil dari Google Sheets)
   const [stock, setStock] = useState({
     wood: 0,
-    carbonVanes: 50,
-    carbonTorba: 20,
+    carbonVanes: 0,
+    carbonTorba: 0,
     busurMax: 25,
-    targetLimits: { ring5: 25, ring6: 25 }
+    targetLimits: { ring5: 25, ring6: 25 },
   });
 
   // Step 3 (target)
@@ -51,20 +55,25 @@ const App = () => {
   // GET STOCK from Google Sheet (auto refresh tiap 5 detik)
   // -------------------------
   useEffect(() => {
+    let mounted = true;
     const fetchStock = async () => {
       try {
-        const res = await fetch(
-          "https://script.google.com/macros/s/AKfycbzgfqXZHKwohAWu8fjS0mbKgVTGP9uH4quOu5ZpbHI7I6d6dSJF3X5oc5YZu4qxUP_tWg/exec?ts=" +
-            Date.now(),
-          { cache: "no-store" }
-        );
+        const url = `${WEB_APP_URL}?ts=${Date.now()}`;
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error("Network response not ok");
         const data = await res.json();
+
+        if (!mounted) return;
+
         setStock({
           wood: Number(data.wood) || 0,
           carbonVanes: Number(data.carbonVanes) || 0,
           carbonTorba: Number(data.carbonTorba) || 0,
           busurMax: Number(data.busurMax) || 25,
-          targetLimits: data.targetLimits || { ring5: 25, ring6: 25 }
+          targetLimits: {
+            ring5: Number(data.targetLimits?.ring5) || 25,
+            ring6: Number(data.targetLimits?.ring6) || 25,
+          },
         });
       } catch (error) {
         console.error("Gagal ambil data stock:", error);
@@ -73,8 +82,28 @@ const App = () => {
 
     fetchStock(); // initial fetch
     const interval = setInterval(fetchStock, 5000); // refresh tiap 5 detik
-    return () => clearInterval(interval);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
   }, []);
+
+  // clamp jumlahBusurRusak jika stock.busurMax berubah / user melebihi
+  useEffect(() => {
+    const max = Number(stock.busurMax) || 25;
+    if (jumlahBusurRusak > max) setJumlahBusurRusak(max);
+  }, [stock.busurMax]);
+
+  // clamp jumlahTargetRusak sesuai faceTarget limit
+  useEffect(() => {
+    const max =
+      faceTarget === "Target ring 5"
+        ? Number(stock.targetLimits.ring5) || 25
+        : faceTarget === "Target ring 6"
+        ? Number(stock.targetLimits.ring6) || 25
+        : 25;
+    if (jumlahTargetRusak > max) setJumlahTargetRusak(max);
+  }, [faceTarget, stock.targetLimits]);
 
   // -------------------------
   // Open arrow modal
@@ -106,7 +135,7 @@ const App = () => {
             10
           );
           const info = document.getElementById("woodInfo")?.value || "";
-          setArrowWood({ jumlah, info });
+          setArrowWood({ jumlah: isNaN(jumlah) ? 0 : jumlah, info });
         },
       });
     }
@@ -161,8 +190,8 @@ const App = () => {
             document.getElementById("carbonTorbaInfo")?.value || "";
 
           setArrowCarbon({
-            vanes: { jumlah: vanesJumlah, info: vanesInfo },
-            torba: { jumlah: torbaJumlah, info: torbaInfo },
+            vanes: { jumlah: isNaN(vanesJumlah) ? 0 : vanesJumlah, info: vanesInfo },
+            torba: { jumlah: isNaN(torbaJumlah) ? 0 : torbaJumlah, info: torbaInfo },
           });
         },
       });
@@ -181,8 +210,7 @@ const App = () => {
   const handleTouchEnd = () => {
     if (offsetX < -50 && currentStep < steps.length - 1)
       setCurrentStep((s) => s + 1);
-    else if (offsetX > 50 && currentStep > 0)
-      setCurrentStep((s) => s - 1);
+    else if (offsetX > 50 && currentStep > 0) setCurrentStep((s) => s - 1);
     setOffsetX(0);
   };
 
@@ -192,12 +220,20 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // buat arrowData supaya GAS kebaca (compat dengan doPost)
+    const arrowData = [
+      { name: "Arrow Wood", jumlah: Number(arrowWood.jumlah || 0), info: arrowWood.info || "" },
+      { name: "Arrow Vanes", jumlah: Number(arrowCarbon.vanes.jumlah || 0), info: arrowCarbon.vanes.info || "" },
+      { name: "Arrow Torba", jumlah: Number(arrowCarbon.torba.jumlah || 0), info: arrowCarbon.torba.info || "" },
+    ];
+
     const formData = {
       busur,
       jumlahBusurRusak,
       kerusakanBusur,
       arrowWood,
       arrowCarbon,
+      arrowData, // penting — doPost bakal prefer arrowData
       faceTarget,
       jumlahTargetRusak,
       sponsTarget,
@@ -212,14 +248,12 @@ Arrow Carbon:
 
     try {
       setIsLoading(true);
-      const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbzgfqXZHKwohAWu8fjS0mbKgVTGP9uH4quOu5ZpbHI7I6d6dSJF3X5oc5YZu4qxUP_tWg/exec",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetch(WEB_APP_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error("Network response not ok");
       const result = await res.json();
       const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(
         result.message + "\n\n" + arrowReport
