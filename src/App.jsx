@@ -52,7 +52,7 @@ useEffect(() => {
   const fetchStock = async () => {
     try {
       const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbzbv7oYJlh014giahy3DKbVqD9EANCY_Y8m6x95tI_srIFXa_-jlZT7u-fjTSIENpMFnA/https://script.google.com/macros/s/AKfycbwHNHEFSZLrz6TCC1BIpa7ZPvIFdbxxIdLU6DYYmLyQW8DT9DxqpjFsTgrVtzBlIFXzaw/exec?ts=" +
+        "https://script.google.com/macros/s/AKfycbwHNHEFSZLrz6TCC1BIpa7ZPvIFdbxxIdLU6DYYmLyQW8DT9DxqpjFsTgrVtzBlIFXzaw/exec?ts=" +
           Date.now(),
         { cache: "no-store" }
       );
