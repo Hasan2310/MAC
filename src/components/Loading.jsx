@@ -17,7 +17,7 @@ const LoadingOverlay = ({ show }) => {
   }, [show]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence className="overflow-y-hidden">
       {isVisible && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center bg-white"
