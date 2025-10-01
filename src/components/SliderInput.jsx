@@ -5,7 +5,7 @@ const SliderInput = ({ value, setValue, max = 25 }) => {
   const sisa = max - value;
 
   return (
-    <div className="flex flex-col gap-2 w-full py-3">
+    <div className="flex flex-col gap-2 w-full py-3 ps-3">
       <div className="flex items-center gap-3 w-full">
         <Range
           step={1}
@@ -39,13 +39,13 @@ const SliderInput = ({ value, setValue, max = 25 }) => {
             const val = Number(e.target.value);
             setValue(isNaN(val) || val < 0 ? 0 : Math.min(val, max));
           }}
-          className="w-12 text-center"
+          className="w-8 text-center"
         />
       </div>
 
       {/* tampil stok tersisa */}
       <div className="text-sm text-gray-500">
-        Sisa inventori: {sisa}
+        Siap dipakai {sisa}
       </div>
     </div>
   );

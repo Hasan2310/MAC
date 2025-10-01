@@ -7,22 +7,21 @@ const LoadingOverlay = ({ show }) => {
   useEffect(() => {
     let timer;
     if (!show) {
-      // kasih delay dikit sebelum hilang, biar smooth
-      timer = setTimeout(() => setIsVisible(false), 800); // > duration exit animasi
+      // delay biar animasi exit kebaca
+      timer = setTimeout(() => setIsVisible(false), 800);
     } else {
-      setIsVisible(true); // kalau loading muncul lagi, tampilkan lagi
+      setIsVisible(true);
     }
 
     return () => clearTimeout(timer);
   }, [show]);
 
   return (
-    <AnimatePresence className="overflow-y-hidden">
+    <AnimatePresence>
       {isVisible && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center bg-white"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          // hapus animasi masuk, biarin default muncul langsung
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6 }}
         >
@@ -30,8 +29,9 @@ const LoadingOverlay = ({ show }) => {
             src="/Archer_Load.gif"
             alt="Loading"
             className="w-80 h-80"
-            initial={{ opacity: 0.6 }}
-            animate={{ opacity: 1 }}
+            animate={{
+              opacity: [0.6, 1],
+            }}
             transition={{
               duration: 1.2,
               ease: "easeInOut",

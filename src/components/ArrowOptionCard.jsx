@@ -11,7 +11,7 @@ const ArrowOptionCard = ({ option, arrow, onClick }) => {
         ${arrow.selected ? "text-[#233975] border-[2px] border-[#233975]" : "border-[#D9D9D9] text-black border-1"}`}
         onClick={onClick}
       >
-        <div className="font-medium mb-2">{option}</div>
+        <div className="font-bold md:text-xl text-sm mb-2">{option}</div>
         <img
           src={imgSrc}
           alt={option}

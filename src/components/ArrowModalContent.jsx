@@ -63,7 +63,7 @@ const ArrowModalContent = ({
       </div>
 
       <div className="text-sm text-gray-500 text-left -mt-5">
-        Sisa inventori: {maxStock - val}
+        Siap dipakai {maxStock - val}
       </div>
 
       <input

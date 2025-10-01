@@ -48,7 +48,7 @@ const StepTarget = ({
           />
         ) : (
           <p className="text-gray-500 italic text-sm">
-            Maksimum target tidak tersedia
+            Tidak tersedia di inventori
           </p>
         )}
       </div>
