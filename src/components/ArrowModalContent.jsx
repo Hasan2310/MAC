@@ -6,11 +6,12 @@ const ArrowModalContent = ({
   inputId,
   initialInfo = "",
   infoId,
-  maxStock = 25, // stok berbeda-beda
+  maxStock = 25,
 }) => {
   const [val, setVal] = useState(initial);
   const [info, setInfo] = useState(initialInfo);
 
+  // Update nilai di input DOM tiap val/info berubah
   useEffect(() => {
     const el = document.getElementById(inputId);
     if (el) el.value = val;
@@ -30,7 +31,7 @@ const ArrowModalContent = ({
           renderTrack={({ props, children }) => (
             <div {...props} className="rounded-lg bg-gray-300 h-2 relative w-full">
               <div
-                className="h-2 bg-[#233975] rounded-lg absolute "
+                className="h-2 bg-[#233975] rounded-lg absolute"
                 style={{ width: `${(val / maxStock) * 100}%` }}
               />
               {children}
@@ -49,7 +50,7 @@ const ArrowModalContent = ({
           type="number"
           min={0}
           max={maxStock}
-          value={val}
+          defaultValue={initial} // pakai defaultValue supaya uncontrolled input, biar user bebas isi
           onChange={(e) => {
             let n = parseInt(e.target.value, 10);
             if (isNaN(n)) n = 0;
@@ -61,7 +62,6 @@ const ArrowModalContent = ({
         />
       </div>
 
-      {/* Inventori tersisa */}
       <div className="text-sm text-gray-500 text-left -mt-5">
         Sisa inventori: {maxStock - val}
       </div>
@@ -69,7 +69,7 @@ const ArrowModalContent = ({
       <input
         id={infoId}
         type="text"
-        value={info}
+        defaultValue={initialInfo} // pakai defaultValue juga supaya user isi sendiri
         onChange={(e) => setInfo(e.target.value)}
         placeholder="Contoh: fletching copot"
         className="w-full border-b border-gray-600 focus:outline-none py-1 -mt-1"

@@ -99,8 +99,8 @@ const App = () => {
       faceTarget === "Target ring 5"
         ? Number(stock.targetLimits.ring5) || 0
         : faceTarget === "Target ring 6"
-        ? Number(stock.targetLimits.ring6) || 0
-        : 0;
+          ? Number(stock.targetLimits.ring6) || 0
+          : 0;
     if (jumlahTargetRusak > max) setJumlahTargetRusak(max);
   }, [faceTarget, stock.targetLimits]);
 
@@ -165,18 +165,16 @@ const App = () => {
         showConfirmButton: false,
         allowOutsideClick: true,
         willClose: () => {
-          const vanesJumlah = parseInt(document.getElementById("carbonVanesJumlah")?.value || "0", 10);
-          const vanesInfo = document.getElementById("carbonVanesInfo")?.value || "";
+          const jumlah = parseInt(document.getElementById("woodJumlah")?.value || "0", 10);
+          const info = document.getElementById("woodInfo")?.value || "";
 
-          const torbaJumlah = parseInt(document.getElementById("carbonTorbaJumlah")?.value || "0", 10);
-          const torbaInfo = document.getElementById("carbonTorbaInfo")?.value || "";
-
-          setArrowCarbon({
-            vanes: { jumlah: isNaN(vanesJumlah) ? 0 : vanesJumlah, info: vanesInfo },
-            torba: { jumlah: isNaN(torbaJumlah) ? 0 : torbaJumlah, info: torbaInfo },
-            selected: vanesJumlah > 0 || torbaJumlah > 0,
+          setArrowWood({
+            jumlah: isNaN(jumlah) ? 0 : jumlah,
+            info,
+            selected: jumlah > 0,
           });
         },
+
       });
     }
   };
