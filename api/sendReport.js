@@ -1,28 +1,25 @@
-// server.js
-const express = require("express");
-const fetch = require("node-fetch");
-const cors = require("cors");
+export default async function handler(req, res) {
+  if (req.method === "POST") {
+    try {
+      const gasRes = await fetch(
+        "https://script.google.com/macros/s/AKfycbwDgEzOiyyizArsgB4nzsomp21Grv9Ks50Yix7ECkpSWX7KVzIIEN2sFPLpzSH4USySSg/exec", // 🔥 ganti dengan URL GAS lo
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(req.body),
+        }
+      );
 
-const app = express();
-app.use(express.json());
-app.use(cors()); // supaya bisa diakses dari frontend React di domain lain
+      const data = await gasRes.json();
 
-const GAS_URL = "https://script.google.com/macros/s/AKfycbwDgEzOiyyizArsgB4nzsomp21Grv9Ks50Yix7ECkpSWX7KVzIIEN2sFPLpzSH4USySSg/exec";
-
-app.post("/sendReport", async (req, res) => {
-  try {
-    const response = await fetch(GAS_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req.body),
-    });
-
-    const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+      res.setHeader("Access-Control-Allow-Origin", "*"); // biar frontend bebas akses
+      res.status(200).json(data);
+    } catch (err) {
+      console.error("Proxy error:", err);
+      res.status(500).json({ error: "Failed to fetch GAS" });
+    }
+  } else {
+    res.setHeader("Allow", ["POST"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-});
-
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Proxy server running on port ${PORT}`));
+}
