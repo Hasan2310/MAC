@@ -165,16 +165,24 @@ const App = () => {
         showConfirmButton: false,
         allowOutsideClick: true,
         willClose: () => {
-          const jumlah = parseInt(document.getElementById("woodJumlah")?.value || "0", 10);
-          const info = document.getElementById("woodInfo")?.value || "";
+          const vanesJumlah = parseInt(document.getElementById("carbonVanesJumlah")?.value || "0", 10);
+          const vanesInfo = document.getElementById("carbonVanesInfo")?.value || "";
 
-          setArrowWood({
-            jumlah: isNaN(jumlah) ? 0 : jumlah,
-            info,
-            selected: jumlah > 0,
+          const torbaJumlah = parseInt(document.getElementById("carbonTorbaJumlah")?.value || "0", 10);
+          const torbaInfo = document.getElementById("carbonTorbaInfo")?.value || "";
+
+          setArrowCarbon({
+            vanes: {
+              jumlah: isNaN(vanesJumlah) ? 0 : vanesJumlah,
+              info: vanesInfo,
+            },
+            torba: {
+              jumlah: isNaN(torbaJumlah) ? 0 : torbaJumlah,
+              info: torbaInfo,
+            },
+            selected: (vanesJumlah > 0 || torbaJumlah > 0),
           });
         },
-
       });
     }
   };
