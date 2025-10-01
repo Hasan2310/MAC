@@ -11,7 +11,6 @@ const ArrowModalContent = ({
   const [val, setVal] = useState(initial);
   const [info, setInfo] = useState(initialInfo);
 
-  // Update nilai di input DOM tiap val/info berubah
   useEffect(() => {
     const el = document.getElementById(inputId);
     if (el) el.value = val;
@@ -50,7 +49,7 @@ const ArrowModalContent = ({
           type="number"
           min={0}
           max={maxStock}
-          defaultValue={initial} // pakai defaultValue supaya uncontrolled input, biar user bebas isi
+          defaultValue={initial}
           onChange={(e) => {
             let n = parseInt(e.target.value, 10);
             if (isNaN(n)) n = 0;
@@ -69,7 +68,7 @@ const ArrowModalContent = ({
       <input
         id={infoId}
         type="text"
-        defaultValue={initialInfo} // pakai defaultValue juga supaya user isi sendiri
+        defaultValue={initialInfo}
         onChange={(e) => setInfo(e.target.value)}
         placeholder="Contoh: fletching copot"
         className="w-full border-b border-gray-600 focus:outline-none py-1 -mt-1"
