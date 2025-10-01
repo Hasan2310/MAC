@@ -16,7 +16,7 @@ const MySwal = withReactContent(Swal);
 
 // ganti URL ini kalau lo pake web app URL lain
 const WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbzDEXVSXC9iaCgzbZGkoE1XNQ0vFn387soOlvfX0fHBTdIjd8jQzeWV9RFBZsQLsOcfcg/exec";
+  "https://script.google.com/macros/s/AKfycbwMSffHlYo-MqIiES0KwA3jqRJGmW3kbSoD481Ulo-0irRGe7Ohl81jmXXkCrrgYT4WZQ/exec";
 
 const App = () => {
   const [currentStep, setCurrentStep] = useState(0);
