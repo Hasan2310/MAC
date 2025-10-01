@@ -182,11 +182,32 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const arrowData = [
-      { name: "Arrow Wood", jumlah: Number(arrowWood.jumlah || 0), info: arrowWood.info || "" },
-      { name: "Arrow Vanes", jumlah: Number(arrowCarbon.vanes.jumlah || 0), info: arrowCarbon.vanes.info || "" },
-      { name: "Arrow Torba", jumlah: Number(arrowCarbon.torba.jumlah || 0), info: arrowCarbon.torba.info || "" },
-    ];
+    const arrowData = [];
+
+    if (arrowWood.selected) {
+      arrowData.push({
+        name: "Arrow Wood",
+        jumlah: Number(arrowWood.jumlah || 0),
+        info: arrowWood.info || "",
+      });
+    }
+
+    if (arrowCarbon.selected) {
+      if (arrowCarbon.vanes.jumlah > 0) {
+        arrowData.push({
+          name: "Arrow Vanes",
+          jumlah: Number(arrowCarbon.vanes.jumlah || 0),
+          info: arrowCarbon.vanes.info || "",
+        });
+      }
+      if (arrowCarbon.torba.jumlah > 0) {
+        arrowData.push({
+          name: "Arrow Torba",
+          jumlah: Number(arrowCarbon.torba.jumlah || 0),
+          info: arrowCarbon.torba.info || "",
+        });
+      }
+    }
 
     const formData = {
       busur,
