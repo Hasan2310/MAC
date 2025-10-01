@@ -46,6 +46,10 @@ const StepTarget = ({
             setValue={setJumlahTargetRusak}
             max={currentMax}
           />
+        ) : faceTarget === "" ? (
+          <p className="text-gray-500 italic text-sm">
+            Aktifkan Slider dengan memilih target
+          </p>
         ) : (
           <p className="text-gray-500 italic text-sm">
             Tidak tersedia di inventori

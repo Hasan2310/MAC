@@ -44,7 +44,7 @@ const SliderInput = ({ value, setValue, max = 25 }) => {
       </div>
 
       {/* tampil stok tersisa */}
-      <div className="text-sm text-gray-500">
+      <div className="text-sm -ms-2 text-gray-500">
         Siap dipakai {sisa}
       </div>
     </div>
