@@ -1,7 +1,8 @@
 // App.jsx
 import React, { useState, useRef, useEffect } from "react";
-import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import LoadingOverlay from "./components/Loading";
+import Swal from "sweetalert2";
 
 import logo from "/logo.png";
 import "./App.css";
@@ -21,6 +22,7 @@ const WEB_APP_URL =
 const App = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   // Step 1 (busur)
   const [busur, setBusur] = useState("");
@@ -55,39 +57,46 @@ const App = () => {
   // -------------------------
   // GET STOCK from Google Sheet (refresh tiap 5 detik)
   // -------------------------
-  useEffect(() => {
-    let mounted = true;
-    const fetchStock = async () => {
-      try {
-        const url = `${WEB_APP_URL}?ts=${Date.now()}`;
-        const res = await fetch(url, { cache: "no-store" });
-        if (!res.ok) throw new Error("Network response not ok");
-        const data = await res.json();
+useEffect(() => {
+  let mounted = true;
 
-        if (!mounted) return;
+  const fetchStock = async () => {
+    try {
+      const url = `${WEB_APP_URL}?ts=${Date.now()}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error("Network response not ok");
+      const data = await res.json();
 
-        setStock({
-          wood: Number(data.wood) || 0,
-          carbonVanes: Number(data.carbonVanes) || 0,
-          carbonTorba: Number(data.carbonTorba) || 0,
-          busurMax: Number(data.busurMax) || 0,
-          targetLimits: {
-            ring5: Number(data.targetLimits?.ring5) || 0,
-            ring6: Number(data.targetLimits?.ring6) || 0,
-          },
-        });
-      } catch (error) {
-        console.error("Gagal ambil data stock:", error);
-      }
-    };
+      if (!mounted) return;
 
-    fetchStock();
-    const interval = setInterval(fetchStock, 5000);
-    return () => {
-      mounted = false;
-      clearInterval(interval);
-    };
-  }, []);
+      setStock({
+        wood: Number(data.wood) || 0,
+        carbonVanes: Number(data.carbonVanes) || 0,
+        carbonTorba: Number(data.carbonTorba) || 0,
+        busurMax: Number(data.busurMax) || 0,
+        targetLimits: {
+          ring5: Number(data.targetLimits?.ring5) || 0,
+          ring6: Number(data.targetLimits?.ring6) || 0,
+        },
+      });
+
+      // Selesai loading, tapi kasih delay biar GIF smooth
+      setTimeout(() => setInitialLoading(false), 500); // optional delay
+    } catch (error) {
+      console.error("Gagal ambil data stock:", error);
+      setInitialLoading(false);
+    }
+  };
+
+  fetchStock();
+  const interval = setInterval(fetchStock, 5000);
+
+  return () => {
+    mounted = false;
+    clearInterval(interval);
+  };
+}, []);
+
 
   useEffect(() => {
     const max = Number(stock.busurMax) || 25;
@@ -325,9 +334,9 @@ Arrow Carbon:
       targetLimits={stock.targetLimits}
     />,
   ];
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+      <LoadingOverlay show={initialLoading} />
       <form
         onSubmit={handleSubmit}
         onTouchStart={handleTouchStart}
