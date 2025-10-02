@@ -57,45 +57,45 @@ const App = () => {
   // -------------------------
   // GET STOCK from Google Sheet (refresh tiap 5 detik)
   // -------------------------
-useEffect(() => {
-  let mounted = true;
+  useEffect(() => {
+    let mounted = true;
 
-  const fetchStock = async () => {
-    try {
-      const url = `${WEB_APP_URL}?ts=${Date.now()}`;
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error("Network response not ok");
-      const data = await res.json();
+    const fetchStock = async () => {
+      try {
+        const url = `${WEB_APP_URL}?ts=${Date.now()}`;
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error("Network response not ok");
+        const data = await res.json();
 
-      if (!mounted) return;
+        if (!mounted) return;
 
-      setStock({
-        wood: Number(data.wood) || 0,
-        carbonVanes: Number(data.carbonVanes) || 0,
-        carbonTorba: Number(data.carbonTorba) || 0,
-        busurMax: Number(data.busurMax) || 0,
-        targetLimits: {
-          ring5: Number(data.targetLimits?.ring5) || 0,
-          ring6: Number(data.targetLimits?.ring6) || 0,
-        },
-      });
+        setStock({
+          wood: Number(data.wood) || 0,
+          carbonVanes: Number(data.carbonVanes) || 0,
+          carbonTorba: Number(data.carbonTorba) || 0,
+          busurMax: Number(data.busurMax) || 0,
+          targetLimits: {
+            ring5: Number(data.targetLimits?.ring5) || 0,
+            ring6: Number(data.targetLimits?.ring6) || 0,
+          },
+        });
 
-      // Selesai loading, tapi kasih delay biar GIF smooth
-      setTimeout(() => setInitialLoading(false), 500); // optional delay
-    } catch (error) {
-      console.error("Gagal ambil data stock:", error);
-      setInitialLoading(false);
-    }
-  };
+        // Selesai loading, tapi kasih delay biar GIF smooth
+        setTimeout(() => setInitialLoading(false), 500); // optional delay
+      } catch (error) {
+        console.error("Gagal ambil data stock:", error);
+        setInitialLoading(false);
+      }
+    };
 
-  fetchStock();
-  const interval = setInterval(fetchStock, 5000);
+    fetchStock();
+    const interval = setInterval(fetchStock, 5000);
 
-  return () => {
-    mounted = false;
-    clearInterval(interval);
-  };
-}, []);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
 
   useEffect(() => {
@@ -377,10 +377,16 @@ Arrow Carbon:
         <div className="w-full flex justify-center pb-10 pt-2 md:pt-4 bg-white">
           <button
             type="submit"
-            className="w-[80%] md:w-5/6 bg-[#223B7D] text-white font-semibold text-lg md:text-2xl py-3 rounded-lg shadow-[3px_3px_0_0_#fff,3px_3px_0_2px_#000] hover:shadow-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_0_0_#fff,4px_4px_0_1px_#000] transition-transform"
+            disabled={isLoading}
+            className={`w-[80%] md:w-5/6 font-semibold text-lg md:text-2xl py-3 rounded-lg transition-transform
+    ${isLoading
+                ? "bg-gray-400 text-gray-200 cursor-not-allowed shadow-none"
+                : "bg-[#223B7D] text-white shadow-[3px_3px_0_0_#fff,3px_3px_0_2px_#000] hover:shadow-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-[4px_4px_0_0_#fff,4px_4px_0_1px_#000]"
+              }`}
           >
             {isLoading ? "Mengirim..." : "Kirim"}
           </button>
+
         </div>
       </form>
     </div>

@@ -3,34 +3,25 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const LoadingOverlay = ({ show }) => {
   const [isVisible, setIsVisible] = useState(show);
-  const [audio] = useState(() => new Audio("/Arrow_Audio.mp3")); // ganti path sesuai file lo
 
   useEffect(() => {
     let timer;
     if (!show) {
+      // delay biar animasi exit kebaca
       timer = setTimeout(() => setIsVisible(false), 800);
-      audio.pause();
-      audio.currentTime = 0;
     } else {
       setIsVisible(true);
-      audio.loop = true;
-
-      // Trik paksa autoplay
-      audio.muted = true;
-      audio.play().then(() => {
-        audio.muted = false;
-      }).catch((err) => {
-        console.warn("Masih ke-block autoplay:", err);
-      });
     }
+
     return () => clearTimeout(timer);
-  }, [show, audio]);
+  }, [show]);
 
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center bg-white"
+          // hapus animasi masuk, biarin default muncul langsung
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6 }}
         >
