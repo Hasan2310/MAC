@@ -199,6 +199,27 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // =============== VALIDASI DATA WAJIB DIISI ===============
+    if (
+      !busur &&                       // Busur kosong
+      jumlahBusurRusak === 0 &&       // Jumlah busur rusak kosong
+      !kerusakanBusur &&              // Kerusakan busur kosong
+      !arrowWood.selected &&          // Arrow wood gak dipilih
+      !arrowCarbon.selected &&        // Arrow carbon gak dipilih
+      !faceTarget &&                  // Target belum dipilih
+      jumlahTargetRusak === 0 &&      // Jumlah target rusak kosong
+      !sponsTarget                    // Spons kosong
+    ) {
+      Swal.fire({
+        icon: "warning",
+        title: "Form belum diisi",
+        text: "Minimal isi salah satu data sebelum mengirim laporan!",
+      });
+      return; // stop kirim
+    }
+
+    // ===========================================================
+
     const arrowData = [];
 
     if (arrowWood.selected) {
@@ -255,7 +276,9 @@ Arrow Carbon:
       if (!res.ok) throw new Error("Network response not ok");
 
       const result = await res.json();
-      const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(result.message + "\n\n" + arrowReport)}`;
+      const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(
+        result.message + "\n\n" + arrowReport
+      )}`;
       setIsLoading(false);
 
       Swal.fire({
@@ -267,7 +290,7 @@ Arrow Carbon:
         if (r.isConfirmed) window.open(waLink, "_blank");
       });
 
-      // reset
+      // reset form
       setBusur("");
       setBusurRaw("");
       setJumlahBusurRusak(0);
