@@ -264,13 +264,6 @@ const App = () => {
       sponsTarget,
     };
 
-    const arrowReport = `
-Arrow Wood: ${arrowWood.jumlah} (${arrowWood.info || "-"})
-Arrow Carbon:
-  - Vanes: ${arrowCarbon.vanes.jumlah} (${arrowCarbon.vanes.info || "-"})
-  - Torba: ${arrowCarbon.torba.jumlah} (${arrowCarbon.torba.info || "-"})
-    `;
-
     try {
       setIsLoading(true);
       const res = await fetch("/api/sendReport", {
