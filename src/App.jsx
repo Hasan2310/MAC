@@ -447,7 +447,7 @@ const App = () => {
 
             {/* Teks info */}
             <p className="text-lg md:text-2xl font-semibold animate-bounce">
-              Geser ke samping untuk lanjut
+              Geser untuk laporkan item lainnya
             </p>
           </div>
         </div>
