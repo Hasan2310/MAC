@@ -449,7 +449,7 @@ const App = () => {
 
       {/* INTRO OVERLAY ala TikTok */}
       {showIntro && !initialLoading && (
-        <div className="fixed inset-0 bg-black/30 flex flex-col justify-center items-center z-50 text-white pointer-events-none">
+        <div className="fixed inset-0 bg-white/30 flex flex-col justify-center items-center z-50 text-white pointer-events-none">
           <div className="flex flex-col items-center space-y-6">
             <div className="relative w-40 h-20 flex items-center justify-center">
               <img
