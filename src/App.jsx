@@ -436,22 +436,21 @@ const App = () => {
         </div>
       </form>
 
-      {/* INTRO OVERLAY ala TikTok */}
-      {showIntro && !initialLoading && (
-        <div className="fixed inset-0 bg-black/30 flex flex-col justify-center items-center z-50 text-white pointer-events-none">
-          <div className="flex flex-col items-center space-y-6">
-            {/* Animasi panah geser */}
-            <div className="relative w-40 h-20 flex items-center justify-center">
-              <div className="absolute left-0 animate-swipe text-5xl">👉</div>
-            </div>
-
-            {/* Teks info */}
-            <p className="text-lg md:text-2xl font-semibold animate-bounce">
-              Geser untuk laporkan item lainnya
-            </p>
-          </div>
-        </div>
-      )}
+     {/* INTRO OVERLAY ala TikTok */}
+{showIntro && !initialLoading && (
+  <div className="fixed inset-0 bg-black/30 flex flex-col justify-center items-center z-50 text-white pointer-events-none">
+    <div className="flex flex-col items-center space-y-6">
+      {/* Ganti animasi panah geser jadi GIF */}
+      <div className="relative w-40 h-20 flex items-center justify-center">
+        <img 
+          src="/slide.gif" 
+          alt="Geser GIF" 
+          className="w-180 h-180 object-contain"
+        />
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
