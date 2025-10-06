@@ -102,9 +102,20 @@ const App = () => {
   useEffect(() => {
     if (!initialLoading) {
       // kasih delay dikit biar smooth
-      setTimeout(() => setShowIntro(true), 1200);
+      setTimeout(() => setShowIntro(true), 1000);
     }
   }, [initialLoading]);
+
+  // auto hide intro setelah 4 detik
+  useEffect(() => {
+    if (showIntro) {
+      const timer = setTimeout(() => {
+        setShowIntro(false);
+      }, 4000); // 4 detik
+      return () => clearTimeout(timer);
+    }
+  }, [showIntro]);
+
 
   useEffect(() => {
     const max = Number(stock.busurMax) || 25;
@@ -436,21 +447,20 @@ const App = () => {
         </div>
       </form>
 
-     {/* INTRO OVERLAY ala TikTok */}
-{showIntro && !initialLoading && (
-  <div className="fixed inset-0 bg-black/30 flex flex-col justify-center items-center z-50 text-white pointer-events-none">
-    <div className="flex flex-col items-center space-y-6">
-      {/* Ganti animasi panah geser jadi GIF */}
-      <div className="relative w-40 h-20 flex items-center justify-center">
-        <img 
-          src="/slide.gif" 
-          alt="Geser GIF" 
-          className="w-180 h-180 object-contain"
-        />
-      </div>
-    </div>
-  </div>
-)}
+      {/* INTRO OVERLAY ala TikTok */}
+      {showIntro && !initialLoading && (
+        <div className="fixed inset-0 bg-black/30 flex flex-col justify-center items-center z-50 text-white pointer-events-none">
+          <div className="flex flex-col items-center space-y-6">
+            <div className="relative w-40 h-20 flex items-center justify-center">
+              <img
+                src="/slide.gif"
+                alt="Geser GIF"
+                className="w-40 h-40 object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
