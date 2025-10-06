@@ -274,9 +274,7 @@ const App = () => {
       if (!res.ok) throw new Error("Network response not ok");
 
       const result = await res.json();
-      const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(
-        result.message + "\n\n" + arrowReport
-      )}`;
+      const waLink = `https://wa.me/6285778130637?text=${encodeURIComponent(result.message)}`;
       setIsLoading(false);
 
       Swal.fire({
