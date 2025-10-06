@@ -102,7 +102,7 @@ const App = () => {
   useEffect(() => {
     if (!initialLoading) {
       // kasih delay dikit biar smooth
-      setTimeout(() => setShowIntro(true), 1000);
+      setTimeout(() => setShowIntro(true), 1300);
     }
   }, [initialLoading]);
 
