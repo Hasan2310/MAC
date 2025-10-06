@@ -1,4 +1,3 @@
-// App.jsx
 import React, { useState, useRef, useEffect } from "react";
 import withReactContent from "sweetalert2-react-content";
 import LoadingOverlay from "./components/Loading";
@@ -17,12 +16,15 @@ const MySwal = withReactContent(Swal);
 
 // ganti URL ini kalau lo pake web app URL lain
 const WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycby29d3vX1k1DCNKJ5AIpUbffc7yfDQCrXk2OywwpQLcY-NtDxg0iXy9xoDEhCsPBmXt8w/exec";
+  "https://script.google.com/macros/s/AKfycbwKjumIAcje7beJG5aRlpnd4dX3epViIyqcKp__8XqWWXcieGhhtxjj6CUF5piaBV2g5w/exec";
 
 const App = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const [initialLoading, setInitialLoading] = useState(true);
+
+  // overlay intro
+  const [showIntro, setShowIntro] = useState(false);
 
   // Step 1 (busur)
   const [busur, setBusur] = useState("");
@@ -97,6 +99,12 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!initialLoading) {
+      // kasih delay dikit biar smooth
+      setTimeout(() => setShowIntro(true), 1200);
+    }
+  }, [initialLoading]);
 
   useEffect(() => {
     const max = Number(stock.busurMax) || 25;
@@ -199,26 +207,23 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // =============== VALIDASI DATA WAJIB DIISI ===============
     if (
-      !busur &&                       // Busur kosong
-      jumlahBusurRusak === 0 &&       // Jumlah busur rusak kosong
-      !kerusakanBusur &&              // Kerusakan busur kosong
-      !arrowWood.selected &&          // Arrow wood gak dipilih
-      !arrowCarbon.selected &&        // Arrow carbon gak dipilih
-      !faceTarget &&                  // Target belum dipilih
-      jumlahTargetRusak === 0 &&      // Jumlah target rusak kosong
-      !sponsTarget                    // Spons kosong
+      !busur &&
+      jumlahBusurRusak === 0 &&
+      !kerusakanBusur &&
+      !arrowWood.selected &&
+      !arrowCarbon.selected &&
+      !faceTarget &&
+      jumlahTargetRusak === 0 &&
+      !sponsTarget
     ) {
       Swal.fire({
         icon: "warning",
         title: "Form belum diisi",
         text: "Minimal isi salah satu data sebelum mengirim laporan!",
       });
-      return; // stop kirim
+      return;
     }
-
-    // ===========================================================
 
     const arrowData = [];
 
@@ -316,15 +321,28 @@ Arrow Carbon:
     }
   };
 
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
+  // --- SWIPE HANDLER (mobile + PC) ---
+  const handleStart = (clientX) => {
+    touchStartX.current = clientX;
     setOffsetX(0);
   };
-  const handleTouchMove = (e) => setOffsetX(e.touches[0].clientX - touchStartX.current);
-  const handleTouchEnd = () => {
-    if (offsetX < -50 && currentStep < steps.length - 1) setCurrentStep((s) => s + 1);
-    else if (offsetX > 50 && currentStep > 0) setCurrentStep((s) => s - 1);
+
+  const handleMove = (clientX) => {
+    if (touchStartX.current !== 0) {
+      setOffsetX(clientX - touchStartX.current);
+    }
+  };
+
+  const handleEnd = () => {
+    if (offsetX < -50 && currentStep < steps.length - 1) {
+      setCurrentStep((s) => s + 1);
+      if (showIntro) setShowIntro(false);
+    } else if (offsetX > 50 && currentStep > 0) {
+      setCurrentStep((s) => s - 1);
+      if (showIntro) setShowIntro(false);
+    }
     setOffsetX(0);
+    touchStartX.current = 0;
   };
 
   const steps = [
@@ -357,14 +375,23 @@ Arrow Carbon:
       targetLimits={stock.targetLimits}
     />,
   ];
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+      {/* Loading paling atas */}
       <LoadingOverlay show={initialLoading} />
+
+      {/* Form */}
       <form
         onSubmit={handleSubmit}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        // Mobile
+        onTouchStart={(e) => handleStart(e.touches[0].clientX)}
+        onTouchMove={(e) => handleMove(e.touches[0].clientX)}
+        onTouchEnd={handleEnd}
+        // PC
+        onMouseDown={(e) => handleStart(e.clientX)}
+        onMouseMove={(e) => handleMove(e.clientX)}
+        onMouseUp={handleEnd}
         className="bg-white w-full sm:max-w-md md:max-w-lg lg:max-w-xl rounded-2xl shadow-2lg flex flex-col overflow-hidden relative"
       >
         <div className="flex justify-center">
@@ -376,9 +403,15 @@ Arrow Carbon:
         </div>
 
         <div className="relative flex-1 w-full overflow-hidden">
-          <div className="flex transition-transform duration-300" style={{ transform: `translateX(-${currentStep * 100}%)` }}>
+          <div
+            className="flex transition-transform duration-300"
+            style={{ transform: `translateX(-${currentStep * 100}%)` }}
+          >
             {steps.map((step, idx) => (
-              <div key={idx} className="w-full flex-shrink-0 flex flex-col overflow-y-auto px-4 md:px-6 py-4 md:py-6">
+              <div
+                key={idx}
+                className="w-full flex-shrink-0 flex flex-col overflow-y-auto px-4 md:px-6 py-4 md:py-6"
+              >
                 {step}
               </div>
             ))}
@@ -409,9 +442,25 @@ Arrow Carbon:
           >
             {isLoading ? "Mengirim..." : "Kirim"}
           </button>
-
         </div>
       </form>
+
+      {/* INTRO OVERLAY ala TikTok */}
+      {showIntro && !initialLoading && (
+        <div className="fixed inset-0 bg-black/30 flex flex-col justify-center items-center z-50 text-white pointer-events-none">
+          <div className="flex flex-col items-center space-y-6">
+            {/* Animasi panah geser */}
+            <div className="relative w-40 h-20 flex items-center justify-center">
+              <div className="absolute left-0 animate-swipe text-5xl">👉</div>
+            </div>
+
+            {/* Teks info */}
+            <p className="text-lg md:text-2xl font-semibold animate-bounce">
+              Geser ke samping untuk lanjut
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

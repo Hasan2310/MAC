@@ -4,3 +4,24 @@
 body {
     font-family: "Poppins", sans-serif;
 }
+
+@keyframes swipe {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateX(60px);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-swipe {
+    animation: swipe 1.5s infinite;
+}
